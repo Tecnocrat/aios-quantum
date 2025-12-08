@@ -1,0 +1,3 @@
+[submodule "aios-upstream"]
+	path = external/aios
+	url = https://github.com/Tecnocrat/aios.git
