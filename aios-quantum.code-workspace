@@ -1,0 +1,26 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		// Exclude external/aios submodule from all VS Code operations
+		"files.exclude": {
+			"external/aios/**": true
+		},
+		"search.exclude": {
+			"external/aios/**": true
+		},
+		"files.watcherExclude": {
+			"external/aios/**": true
+		},
+		// Exclude from Python analysis
+		"python.analysis.exclude": [
+			"external/aios/**"
+		],
+		"python.linting.ignorePatterns": [
+			"external/aios/**"
+		]
+	}
+}
