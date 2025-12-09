@@ -5,17 +5,14 @@
 		}
 	],
 	"settings": {
-		// Exclude external/aios submodule from all VS Code operations
-		"files.exclude": {
-			"external/aios/**": true
-		},
+		// Exclude external/aios from search (but visible in explorer)
 		"search.exclude": {
 			"external/aios/**": true
 		},
 		"files.watcherExclude": {
 			"external/aios/**": true
 		},
-		// Exclude from Python analysis
+		// Exclude from Python analysis and linting
 		"python.analysis.exclude": [
 			"external/aios/**"
 		],
