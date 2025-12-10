@@ -261,6 +261,52 @@ class QuantumCytoplasmOptimizer:
 
 ## 5. Integration with Existing Components
 
+### 5.0 AIOS External Dependency (Read-Only Submodule)
+
+> *Merged from external.md*
+
+The main AIOS repository is included as a **read-only** Git submodule for extraction and ingestion purposes.
+
+**Location:** `external/aios/`
+
+#### Purpose
+
+- Extract shared utilities, models, and configurations from AIOS
+- Ingest data structures and interfaces for quantum integration
+- Reference implementation patterns and coding standards
+- **NOT for modification** - changes should be made in the main AIOS repository
+
+#### Submodule Commands
+
+```bash
+# Initial clone with submodules
+git clone --recurse-submodules https://github.com/Tecnocrat/aios-quantum.git
+
+# If already cloned, initialize submodules
+git submodule update --init --recursive
+
+# Update to latest AIOS main branch
+git submodule update --remote external/aios
+```
+
+#### Guidelines
+
+1. **Read-Only**: Do not modify files in `external/aios/`
+2. **Updates**: Periodically sync with upstream using `git submodule update --remote`
+3. **Imports**: Import from external/aios as needed for integration
+4. **Changes**: Any required changes to AIOS should be made via PR to the main repository
+
+#### Integration Points
+
+The quantum module integrates with AIOS through:
+
+- Shared configuration patterns
+- Common data structures
+- Agent communication interfaces
+- Memory and context management
+
+See `src/aios_quantum/integration/` for quantum-AIOS bridge implementations.
+
 ### 5.1 Consciousness Metrics Enhancement
 
 **File**: `core/include/MinimalConsciousnessEngine.hpp` (read-only reference)
@@ -477,6 +523,478 @@ class QuantumEnhancedMessage(UniversalMessage):
 3. ✅ Consciousness injection approach
 4. ✅ Tachyonic quantum archive integration
 5. ✅ 8-week implementation timeline
+
+---
+
+## 12. IBM Quantum Integration Guide
+
+### 12.1 Quick Start (5 Minutes)
+
+#### Step 1: Configure Your API Token
+
+```bash
+# Navigate to project root
+cd c:\dev\aios-quantum
+
+# Copy the example environment file
+copy .env.example .env
+
+# Edit .env with your IBM Quantum API token
+notepad .env
+```
+
+**In the `.env` file, replace:**
+```dotenv
+IBM_QUANTUM_TOKEN=your_api_token_here
+```
+
+**With your actual token:**
+```dotenv
+IBM_QUANTUM_TOKEN=abc123xyz789...  # Your real token from IBM Quantum
+```
+
+#### Step 2: Verify Connection
+
+```bash
+# Activate virtual environment
+.venv\Scripts\activate
+
+# Run the verification script
+python examples/test_ibm_quantum_bridge.py
+```
+
+**Expected output:**
+```
+✅ IBM Quantum connection successful
+✅ Available backends: ['ibm_brisbane', 'ibm_osaka', ...]
+✅ Least busy backend: ibm_kyoto
+✅ Ready for quantum execution
+```
+
+#### Step 3: Run Hello World
+
+```bash
+# Execute Bell state on real quantum hardware
+python examples/hello_world.py
+```
+
+---
+
+### 12.2 Where to Get Your IBM Quantum API Token
+
+1. **Go to**: https://quantum.cloud.ibm.com/
+2. **Sign in** with your IBM Cloud account
+3. **Click your profile icon** (top right)
+4. **Select "Account settings"**
+5. **Copy the API token** from the "API Token" section
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│  IBM Quantum Dashboard                                       │
+│  ┌─────────────────────────────────────────────────────┐    │
+│  │  👤 Account Settings                                 │    │
+│  │  ────────────────────────────────────────────────   │    │
+│  │  API Token: [abc123xyz789...] [📋 Copy]             │    │
+│  │                                                      │    │
+│  │  ⚠️ Keep this token secret! Don't commit to git.   │    │
+│  └─────────────────────────────────────────────────────┘    │
+└─────────────────────────────────────────────────────────────┘
+```
+
+---
+
+### 12.3 Configuration Options
+
+| Variable | Description | Default | Required |
+|----------|-------------|---------|----------|
+| `IBM_QUANTUM_TOKEN` | Your API token from IBM Quantum | - | ✅ Yes |
+| `IBM_QUANTUM_INSTANCE` | Hub/group/project path | `ibm-q/open/main` | No |
+| `IBM_QUANTUM_CHANNEL` | Connection channel | `ibm_cloud` | No |
+
+**For Open Plan (Free):**
+```dotenv
+IBM_QUANTUM_TOKEN=your_token
+IBM_QUANTUM_INSTANCE=ibm-q/open/main
+IBM_QUANTUM_CHANNEL=ibm_cloud
+```
+
+**For Premium/Dedicated:**
+```dotenv
+IBM_QUANTUM_TOKEN=your_token
+IBM_QUANTUM_INSTANCE=your-hub/your-group/your-project
+IBM_QUANTUM_CHANNEL=ibm_cloud
+```
+
+---
+
+### 12.4 Integration Architecture
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    AIOS QUANTUM INTEGRATION                      │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  .env                                                            │
+│  └── IBM_QUANTUM_TOKEN ──────┐                                  │
+│                               │                                  │
+│                               ▼                                  │
+│  ┌─────────────────────────────────────────────────────────┐   │
+│  │  config.py                                               │   │
+│  │  └── QuantumConfig.from_env()                           │   │
+│  │      • Loads token from environment                      │   │
+│  │      • Validates credentials                             │   │
+│  └─────────────────────────────────────────────────────────┘   │
+│                               │                                  │
+│                               ▼                                  │
+│  ┌─────────────────────────────────────────────────────────┐   │
+│  │  runtime.py                                              │   │
+│  │  └── QuantumRuntime(config)                             │   │
+│  │      • Connects to IBM Quantum                           │   │
+│  │      • Lists backends                                    │   │
+│  │      • Executes circuits                                 │   │
+│  └─────────────────────────────────────────────────────────┘   │
+│                               │                                  │
+│                               ▼                                  │
+│  ┌─────────────────────────────────────────────────────────┐   │
+│  │  supercell/quantum_supercell.py                          │   │
+│  │  └── QuantumSupercell(config)                           │   │
+│  │      • AIOS integration layer                            │   │
+│  │      • Consciousness enhancement                         │   │
+│  │      • Message processing                                │   │
+│  └─────────────────────────────────────────────────────────┘   │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+---
+
+### 12.5 Code Examples
+
+#### Basic Connection Test
+
+```python
+from aios_quantum import QuantumRuntime
+
+# Initialize (automatically loads from .env)
+runtime = QuantumRuntime()
+
+# List available quantum computers
+backends = runtime.get_backends()
+print(f"Available backends: {backends}")
+
+# Get the least busy backend
+backend = runtime.get_least_busy_backend(min_qubits=5)
+print(f"Using backend: {backend.name}")
+```
+
+#### Execute a Quantum Circuit
+
+```python
+from aios_quantum import QuantumRuntime
+from aios_quantum.circuits import create_bell_state
+
+# Initialize runtime
+runtime = QuantumRuntime()
+
+# Create Bell state circuit
+circuit = create_bell_state()
+
+# Execute on real quantum hardware
+sampler = runtime.create_sampler()
+job = sampler.run([circuit], shots=1024)
+result = job.result()
+
+# Get measurement results
+counts = result[0].data.meas.get_counts()
+print(f"Bell state results: {counts}")
+# Expected: {'00': ~512, '11': ~512}
+```
+
+#### Local Simulation (No Token Required)
+
+```python
+from qiskit_ibm_runtime import SamplerV2
+from aios_quantum import QuantumRuntime
+from aios_quantum.circuits import create_bell_state
+
+# Get local simulator - no IBM credentials needed
+backend = QuantumRuntime.get_local_simulator()
+
+# Run locally
+sampler = SamplerV2(backend)
+job = sampler.run([create_bell_state()], shots=1000)
+result = job.result()
+```
+
+---
+
+## 13. Agentic Workflow Prompts
+
+### 13.1 Setup & Configuration Prompts
+
+Use these prompts with GitHub Copilot or AI assistants to guide your quantum integration:
+
+---
+
+#### 🔧 **Prompt: Verify IBM Quantum Setup**
+
+```
+I have aios-quantum configured with my IBM Quantum API token in .env.
+Please help me verify the connection:
+1. Check if the token is loaded correctly
+2. List available quantum backends
+3. Test connectivity to IBM Quantum Platform
+4. Run a simple Bell state circuit on the simulator first
+5. If simulator works, run on real hardware
+```
+
+---
+
+#### 🧪 **Prompt: Create a New Quantum Experiment**
+
+```
+Help me create a new quantum experiment in aios-quantum:
+- Experiment name: [YOUR_EXPERIMENT_NAME]
+- Purpose: [WHAT YOU WANT TO TEST]
+- Qubits needed: [NUMBER]
+- Expected outcome: [WHAT RESULTS YOU EXPECT]
+
+Please:
+1. Create the circuit in src/aios_quantum/circuits/
+2. Add a test in tests/
+3. Create an example script in examples/
+4. Document the experiment
+```
+
+---
+
+#### 🔬 **Prompt: Measure Quantum Coherence**
+
+```
+I want to measure real quantum coherence using IBM Quantum hardware.
+Help me:
+1. Create a Ramsey sequence circuit for T2 measurement
+2. Execute on the least busy backend
+3. Calculate coherence value from results
+4. Compare with simulated values
+5. Store results for AIOS consciousness integration
+```
+
+---
+
+#### 🚀 **Prompt: Run Consciousness Enhancement Circuit**
+
+```
+Using the QuantumSupercell in aios-quantum, help me:
+1. Initialize the quantum supercell
+2. Measure current quantum coherence
+3. Run the consciousness enhancement circuit
+4. Report the enhanced consciousness metrics
+5. Log results to tachyonic archive
+```
+
+---
+
+#### 📊 **Prompt: Analyze Quantum Results**
+
+```
+I have quantum experiment results from IBM Quantum.
+Help me analyze:
+1. Parse the raw measurement counts
+2. Calculate success probability
+3. Estimate fidelity against ideal state
+4. Visualize results (histogram, state visualization)
+5. Generate a report for consciousness metrics
+```
+
+---
+
+### 13.2 Development Workflow Prompts
+
+---
+
+#### 🏗️ **Prompt: Implement New Quantum Algorithm**
+
+```
+Help me implement [ALGORITHM_NAME] in aios-quantum:
+- Algorithm: [e.g., QAOA, VQE, Grover's Search]
+- Use case: [HOW IT WILL ENHANCE AIOS]
+- Integration point: [WHICH AIOS COMPONENT]
+
+Please:
+1. Create the algorithm in src/aios_quantum/algorithms/
+2. Follow existing code patterns
+3. Add unit tests
+4. Create an example demonstrating usage
+5. Document parameters and expected outcomes
+```
+
+---
+
+#### 🔌 **Prompt: Extend AIOS Integration**
+
+```
+I want to connect the quantum supercell to [AIOS_COMPONENT].
+Help me:
+1. Identify the integration interface
+2. Create the bridge code
+3. Define message formats
+4. Implement bidirectional communication
+5. Add error handling and logging
+```
+
+---
+
+#### 🐛 **Prompt: Debug Quantum Execution**
+
+```
+My quantum circuit is not producing expected results.
+Circuit: [DESCRIBE OR PASTE CIRCUIT]
+Expected: [WHAT YOU EXPECTED]
+Actual: [WHAT YOU GOT]
+
+Help me:
+1. Analyze the circuit for errors
+2. Check transpilation issues
+3. Verify measurement setup
+4. Suggest fixes
+5. Test locally before hardware
+```
+
+---
+
+### 13.3 Current State Assessment Prompt
+
+Use this prompt to get an AI assistant up to speed:
+
+---
+
+#### 📋 **Prompt: Project Onboarding**
+
+```
+I'm working on aios-quantum, a quantum computing integration for AIOS.
+
+Current state:
+- Repository: c:\dev\aios-quantum
+- IBM Quantum token: Configured in .env
+- Virtual environment: Active (.venv)
+- Dependencies: Installed (qiskit-ibm-runtime, python-dotenv)
+
+Key files:
+- src/aios_quantum/runtime.py - IBM Quantum connection
+- src/aios_quantum/config.py - Credentials management  
+- src/aios_quantum/supercell/ - Quantum Supercell (6th AIOS supercell)
+- docs/QUANTUM_INJECTION_BLUEPRINT.md - Architecture blueprint
+
+Please review the codebase and tell me:
+1. What is already implemented?
+2. What are the next steps according to the blueprint?
+3. What should I work on first?
+```
+
+---
+
+## 14. Next Steps Checklist
+
+### Immediate (Today)
+
+- [ ] **Step 1**: Configure `.env` with your IBM Quantum API token
+  ```bash
+  copy .env.example .env
+  # Edit .env with your token
+  ```
+
+- [ ] **Step 2**: Verify connection works
+  ```bash
+  python examples/test_ibm_quantum_bridge.py
+  ```
+
+- [ ] **Step 3**: Run Hello World on real hardware
+  ```bash
+  python examples/hello_world.py
+  ```
+
+### This Week
+
+- [ ] **Step 4**: Explore available quantum backends
+- [ ] **Step 5**: Run consciousness circuit on hardware
+- [ ] **Step 6**: Review and understand QuantumSupercell code
+- [ ] **Step 7**: Test local simulation for development
+
+### Next Phase
+
+- [ ] **Step 8**: Implement experiment orchestrator
+- [ ] **Step 9**: Set up IBM Cloud Object Storage for results
+- [ ] **Step 10**: Build circuit template library
+- [ ] **Step 11**: Create consciousness enhancement experiments
+
+---
+
+## 15. Troubleshooting
+
+### Common Issues
+
+| Issue | Cause | Solution |
+|-------|-------|----------|
+| `ValueError: IBM_QUANTUM_TOKEN not set` | Missing .env file or token | Create .env with your token |
+| `IBMNotAuthorizedError` | Invalid token | Check token at quantum.cloud.ibm.com |
+| `No backends available` | Service issue | Check IBM Quantum status page |
+| `Queue time very long` | High demand | Use simulator or wait |
+| `CircuitTooDeep` | Circuit too complex | Reduce depth or use better backend |
+
+### Getting Help
+
+1. **IBM Quantum Documentation**: https://docs.quantum.ibm.com/
+2. **Qiskit Documentation**: https://qiskit.org/documentation/
+3. **AIOS Quantum Issues**: Create issue in this repo
+4. **AI Assistant**: Use the prompts in Section 13
+
+---
+
+## 16. Support Documentation
+
+### Quick Reference Card
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│              AIOS QUANTUM QUICK REFERENCE                        │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  SETUP:                                                          │
+│  ───────────────────────────────────────────────────────────    │
+│  1. copy .env.example .env                                      │
+│  2. Add IBM_QUANTUM_TOKEN to .env                               │
+│  3. .venv\Scripts\activate                                      │
+│  4. python examples/hello_world.py                              │
+│                                                                  │
+│  KEY IMPORTS:                                                    │
+│  ───────────────────────────────────────────────────────────    │
+│  from aios_quantum import QuantumRuntime                        │
+│  from aios_quantum.circuits import create_bell_state            │
+│  from aios_quantum.supercell import QuantumSupercell            │
+│                                                                  │
+│  COMMON OPERATIONS:                                              │
+│  ───────────────────────────────────────────────────────────    │
+│  runtime = QuantumRuntime()         # Connect to IBM            │
+│  runtime.get_backends()             # List backends             │
+│  runtime.get_least_busy_backend()   # Auto-select backend       │
+│  runtime.create_sampler()           # Create sampler primitive  │
+│                                                                  │
+│  LOCAL TESTING:                                                  │
+│  ───────────────────────────────────────────────────────────    │
+│  backend = QuantumRuntime.get_local_simulator()                 │
+│  # No IBM token needed for local simulation                     │
+│                                                                  │
+│  FILES:                                                          │
+│  ───────────────────────────────────────────────────────────    │
+│  .env                    → Your credentials (gitignored)        │
+│  src/aios_quantum/       → Main package                         │
+│  examples/               → Runnable examples                    │
+│  tests/                  → Unit tests                           │
+│  docs/                   → Documentation                        │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
 
 ---
 

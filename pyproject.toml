@@ -8,7 +8,7 @@ license = {text = "MIT"}
 authors = [
     {name = "Tecnocrat"}
 ]
-keywords = ["quantum", "computing", "qiskit", "ibm-quantum", "aios"]
+keywords = ["quantum", "computing", "qiskit", "ibm-quantum", "aios", "consciousness"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
@@ -18,12 +18,30 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "Topic :: Scientific/Engineering :: Physics",
 ]
 
 dependencies = [
-    "qiskit-ibm-runtime>=0.20.0",
-    "python-dotenv>=1.0.0",
+    # === IBM Quantum Core ===
+    "qiskit>=2.0.0",                    # Quantum circuit SDK
+    "qiskit-ibm-runtime>=0.20.0",       # IBM Quantum Runtime (includes IBM backends)
+    
+    # === IBM Cloud Integration ===
+    "ibm-cloud-sdk-core>=3.20.0",       # IBM Cloud SDK core
+    "ibm-platform-services>=0.50.0",    # IBM Cloud platform services
+    
+    # === Configuration & Environment ===
+    "python-dotenv>=1.0.0",             # Load .env files
+    "pydantic>=2.0.0",                  # Data validation
+    
+    # === Scientific Computing ===
+    "numpy>=1.20.0",                    # Numerical computing
+    "scipy>=1.7.0",                     # Scientific algorithms
+    
+    # === Async & Networking ===
+    "requests>=2.25.0",                 # HTTP client
+    "aiohttp>=3.8.0",                   # Async HTTP client
 ]
 
 [project.optional-dependencies]
@@ -32,6 +50,24 @@ dev = [
     "pytest-asyncio>=0.21.0",
     "black>=23.0.0",
     "ruff>=0.1.0",
+]
+
+cloud = [
+    # === IBM Cloud Object Storage ===
+    "ibm-cos-sdk>=2.13.0",              # Cloud Object Storage SDK
+    
+    # === IBM Cloud Functions ===
+    # (Deployed separately, no pip package needed)
+]
+
+ml = [
+    # === Quantum Machine Learning ===
+    "qiskit-machine-learning>=0.7.0",   # Quantum ML algorithms
+    "scikit-learn>=1.0.0",              # Classical ML
+]
+
+all = [
+    "aios-quantum[dev,cloud,ml]",
 ]
 
 [build-system]
