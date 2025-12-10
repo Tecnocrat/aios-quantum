@@ -1,0 +1,51 @@
+name: Quantum Heartbeat
+
+on:
+  # Run every hour
+  schedule:
+    - cron: '0 * * * *'
+  
+  # Allow manual trigger
+  workflow_dispatch:
+
+jobs:
+  heartbeat:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: Install dependencies
+        run: |
+          pip install qiskit qiskit-ibm-runtime
+          pip install -e .
+      
+      - name: Run heartbeat (simulator)
+        run: |
+          python -c "
+          from aios_quantum.heartbeat import QuantumHeartbeat, HeartbeatConfig
+          
+          config = HeartbeatConfig(
+              use_simulator=True,
+              num_qubits=5,
+              shots=1024,
+          )
+          
+          heartbeat = QuantumHeartbeat(config)
+          result = heartbeat.single_beat()
+          
+          print(f'Heartbeat complete: coherence={result.coherence_estimate:.4f}')
+          "
+      
+      - name: Commit results
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add heartbeat_results/
+          git diff --staged --quiet || git commit -m "Heartbeat $(date -u +'%Y-%m-%d %H:%M') UTC"
+          git push

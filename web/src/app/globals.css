@@ -1,0 +1,23 @@
+:root {
+  --bg-color: #000011;
+  --text-color: #00ffff;
+  --accent-color: #00ff00;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg-color);
+  color: var(--text-color);
+  font-family: 'Courier New', monospace;
+}
+
+#__next {
+  height: 100%;
+}
