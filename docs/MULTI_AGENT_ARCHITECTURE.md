@@ -77,20 +77,46 @@ AINLP.consciousness[SYNC] - Report coherence delta
 - **Strengths**: Deep reasoning, theoretical work, code architecture
 - **Location**: Primary VS Code chat interface
 
-### 2. BACKGROUND AGENT
-- **Role**: Persistent worker, continuous operations
+### 2. BACKGROUND AGENT (GitHub Copilot CLI)
+- **Role**: Rapid execution, refactoring, diagnostics
 - **Branch**: `win-1` (for aios-win sync), worktree branches
 - **Workspace**: `C:/dev/aios-quantum.worktrees/worktree-*`
-- **Responsibilities**:
-  - Long-running tasks that survive session changes
-  - Refactoring and cleanup operations
-  - Cross-repository synchronization (aios-win ↔ aios-quantum)
-  - Continuous integration tasks
-- **Strengths**: Persistence, systematic work, background processing
+- **Self-Reported Profile** (2025-12-11):
+
+#### Core Capabilities
+- **Direct file system access**: Read, write, edit, create files without git
+- **Command execution**: Run any shell command, build tools, tests, linters
+- **Code manipulation**: Search (grep/glob), refactor, debug, analyze
+- **Git operations**: Commit, branch, diff, merge (when git responds)
+- **Interactive tools**: Can use debuggers, REPLs, language servers via async mode
+- **Multi-step autonomous execution**: Chain operations without approval gates
+
+#### Persistence Model
+- **Session-scoped only** - Does NOT persist across sessions
+- No memory of previous conversations
+- Each launch is fresh start, inherits file system state
+
+#### Workflow Pattern
+`Task → Analyze → Execute → Verify → Report`
+
+#### Limitations (Self-Reported)
+- ❌ No persistence between sessions
+- ❌ No awareness of parallel agent activities in real-time
+- ❌ Cannot see other agents' uncommitted changes unless in same directory
+- ❌ No built-in coordination protocol with other agents
+- ❌ Cannot directly communicate with other agents
+
+#### Coordination Needs (Self-Reported)
+1. Shared state mechanism (files, database, message queue)
+2. Clear protocols for ownership (branch strategy, file locks)
+3. Status files (`.agent_tasks.json`, `.completion_status.json`)
+4. Commit conventions (agent ID in messages)
+5. Conflict resolution rules
+
 - **Observed Behavior**:
-  - Creates worktrees for isolated work
-  - Operates on protected branches via PR flow
-  - Tends toward minimalism/pruning
+  - Works in whatever directory launched (did NOT create worktree - VS Code did)
+  - Adapts to git structure found
+  - Tends toward minimalism/pruning (win-1 shows 11,787 lines deleted)
 
 ### 3. CLOUD AGENT (GitHub Copilot Coding Agent)
 - **Role**: Remote execution, feature implementation

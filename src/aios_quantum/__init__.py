@@ -20,6 +20,7 @@ from .communication import (
     QuantumMessage,
     QuantumState,
 )
+from .about import about, get_info, welcome, print_about
 
 __all__ = [
     "QuantumConfig",
@@ -32,4 +33,8 @@ __all__ = [
     "QuantumMessage",
     "QuantumState",
     "__version__",
+    "about",
+    "get_info",
+    "welcome",
+    "print_about",
 ]
