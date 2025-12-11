@@ -2,7 +2,7 @@
 
 import { Canvas, useFrame } from '@react-three/fiber'
 import { OrbitControls, Line } from '@react-three/drei'
-import { useRef, useMemo, useState } from 'react'
+import { useRef, useMemo, useState, useEffect } from 'react'
 import * as THREE from 'three'
 
 interface HeartbeatData {
@@ -328,6 +328,7 @@ function generateLayeredSpherePoints(
 // The Sphere component with THREE-LAYER encoding
 function TachyonicSphere({ heartbeatData }: Props) {
   const pointsRef = useRef<THREE.Points>(null)
+  const geometryRef = useRef<THREE.BufferGeometry>(null)
   const timeRef = useRef(0)
   const [pattern] = useState<EncodingConfig>(VISION_PATTERN) // Can be changed via UI
   
@@ -339,9 +340,23 @@ function TachyonicSphere({ heartbeatData }: Props) {
     return generateLayeredSpherePoints(0.8, 32, counts, coherence, 0, pattern)
   }, [counts, coherence, pattern])
   
+  // Set up geometry on mount
+  useEffect(() => {
+    if (geometryRef.current) {
+      geometryRef.current.setAttribute(
+        'position',
+        new THREE.BufferAttribute(initialData.positions, 3)
+      )
+      geometryRef.current.setAttribute(
+        'color',
+        new THREE.BufferAttribute(initialData.colors, 3)
+      )
+    }
+  }, [initialData])
+  
   // Update geometry every frame for metaphysical effects
   useFrame((state) => {
-    if (pointsRef.current) {
+    if (pointsRef.current && geometryRef.current) {
       timeRef.current = state.clock.elapsedTime
       
       // Regenerate with current time for animated effects
@@ -350,9 +365,8 @@ function TachyonicSphere({ heartbeatData }: Props) {
       )
       
       // Update geometry
-      const geometry = pointsRef.current.geometry
-      const posAttr = geometry.getAttribute('position')
-      const colAttr = geometry.getAttribute('color')
+      const posAttr = geometryRef.current.getAttribute('position') as THREE.BufferAttribute
+      const colAttr = geometryRef.current.getAttribute('color') as THREE.BufferAttribute
       
       if (posAttr && colAttr) {
         posAttr.array.set(newData.positions)
@@ -368,20 +382,7 @@ function TachyonicSphere({ heartbeatData }: Props) {
   
   return (
     <points ref={pointsRef}>
-      <bufferGeometry>
-        <bufferAttribute
-          attach="attributes-position"
-          count={initialData.positions.length / 3}
-          array={initialData.positions}
-          itemSize={3}
-        />
-        <bufferAttribute
-          attach="attributes-color"
-          count={initialData.colors.length / 3}
-          array={initialData.colors}
-          itemSize={3}
-        />
-      </bufferGeometry>
+      <bufferGeometry ref={geometryRef} />
       <pointsMaterial
         size={0.04}
         vertexColors
