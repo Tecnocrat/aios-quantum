@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  output: 'export',  // Static export for Vercel
+  // Let Vercel handle the build natively
   trailingSlash: true,
 }
 
