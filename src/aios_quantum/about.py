@@ -5,7 +5,7 @@ This module provides information about AIOS (AI Operating System) and its
 Quantum Computing integration.
 """
 
-__all__ = ["about", "get_info", "welcome"]
+__all__ = ["about", "get_info", "welcome", "print_about"]
 
 
 def about() -> dict:
