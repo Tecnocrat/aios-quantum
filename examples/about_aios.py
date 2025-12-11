@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+# AINLP.provenance:
+#   origin: cloud_agent (autonomous)
+#   reviewed: opus (2025-12-11)
+#   example_for: src/aios_quantum/about.py
 """
 AIOS Quantum - About AIOS Example
 

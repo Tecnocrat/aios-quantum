@@ -1,3 +1,7 @@
+# AINLP.provenance:
+#   origin: cloud_agent (autonomous)
+#   reviewed: opus (2025-12-11)
+#   tests_for: src/aios_quantum/about.py
 """Tests for the about module."""
 
 import os

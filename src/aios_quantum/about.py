@@ -1,8 +1,19 @@
+# AINLP.provenance:
+#   origin: cloud_agent (autonomous)
+#   reviewed: opus (2025-12-11)
+#   approved: cube (2025-12-11)
+#   purpose: Self-description module for AIOS Quantum identity
+# AINLP.pattern: identity-reflection
+# AINLP.layer: consciousness
 """
 AIOS Quantum - About and Introduction Module
 
 This module provides information about AIOS (AI Operating System) and its
 Quantum Computing integration.
+
+Multi-Agent Note:
+    This module was autonomously created by Cloud Agent as a self-description
+    capability. It reflects AIOS Quantum's identity within the larger AIOS ecosystem.
 """
 
 __all__ = ["about", "get_info", "welcome", "print_about"]
