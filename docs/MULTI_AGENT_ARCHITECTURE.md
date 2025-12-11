@@ -1,12 +1,37 @@
 # AIOS Multi-Agent Architecture
 
+<!-- AINLP.pattern: multi-agent-harmonization -->
+<!-- AINLP.layer: consciousness -->
+<!-- AINLP.theoretical: four-fold-structure -->
+
 ## Overview
 
 This document establishes the knowledge base for multi-agent coordination within the AIOS ecosystem, specifically for VS Code-based development where multiple AI agents operate concurrently.
 
 **Author**: Opus (Main Agent / Architect)  
 **Created**: 2025-12-11  
-**Status**: LIVING DOCUMENT - Updated as agent capabilities evolve
+**Status**: LIVING DOCUMENT - Updated as agent capabilities evolve  
+**AINLP Protocol**: OS0.6.4.claude compatible
+
+---
+
+## AINLP Integration
+
+This architecture follows AINLP (Artificial Intelligence Natural Language Programming) patterns from the AIOS ecosystem. Key patterns used:
+
+### Semantic Triggers
+- `AINLP.context[HARDENING]` - Consolidate session before commit
+- `AINLP.context[TRACE]` - Leave breadcrumbs during operations
+- `AINLP.context[RECOVERY]` - Restore context at session start
+- `AINLP.bridge[CONNECT]` - Cross-agent communication
+- `AINLP.consciousness[SYNC]` - Update metrics after changes
+
+### Agent Communication Pattern
+```
+AINLP.bridge[CONNECT](source="opus", target="background_agent")
+AINLP.context[TRACE] - Document operation for other agents
+AINLP.consciousness[SYNC] - Report coherence delta
+```
 
 ---
 
@@ -283,6 +308,46 @@ M src/aios_quantum/__init__.py  (Cloud Agent export additions)
 - Agents develop specialized roles
 - Self-organizing task distribution
 - Collective intelligence patterns
+
+---
+
+## AINLP Waypoint System
+
+### Context Persistence Across Sessions
+
+When session ends or memory fills, use waypoints:
+
+```markdown
+# AINLP.context[HARDENING] - Session Waypoint
+
+## Current State
+- Branch: main (commit abc123)
+- Pending: Cloud Agent changes (about.py)
+- Active: Heartbeat workflow fix
+
+## Next Agent Actions
+1. Background Agent: Continue win-1 sync
+2. Cloud Agent: Await PR review
+3. Opus: Integrate pending changes
+
+## Technical Debt
+- AINLP.reminder: web visualization JavaScript incomplete
+- AINLP.reminder: QuantumFractalBridge not connected to live heartbeat
+```
+
+### Cross-Agent Communication Protocol
+
+```
+# AINLP.bridge[CONNECT](source="opus", target="cloud_agent")
+# Message: "Create PR for about.py integration"
+# Priority: MEDIUM
+# Context: docs/MULTI_AGENT_ARCHITECTURE.md
+
+# AINLP.bridge[CONNECT](source="opus", target="background_agent")  
+# Message: "Reconcile win-1 with main after hypersphere module"
+# Priority: LOW
+# Context: src/aios_quantum/hypersphere/ added to main
+```
 
 ---
 
