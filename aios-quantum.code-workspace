@@ -18,6 +18,9 @@
 		],
 		"python.linting.ignorePatterns": [
 			"external/aios/**"
+		],
+		"github-actions.workflows.pinned.workflows": [
+			".github/workflows/heartbeat.yml"
 		]
 	}
 }

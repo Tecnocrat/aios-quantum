@@ -1,0 +1,32 @@
+{
+  "id": "d4tl6sleastc73cg9b7g",
+  "backend": "ibm_torino",
+  "state": {
+    "status": "Completed"
+  },
+  "params": {
+    "pubs": [
+      [
+        {
+          "__value__": "eJyl2GdQk1kYhuHvS4JgRVREVFRERFRUBOyKgg0RFcFeI4KiiBLBhm139c/23nvvvffee++9977rurvsvMkd5XHGWZhkRi9uh0OCnvOeSHFBSWFBaTuPx+uEHu6GGqdVhRPjOM5ex3Gi+GMPv+wRb7+VVQbK6iprM7Izx8eu2ZY+Z8Ty+h01bnCV69Y4+nAbfRV7hJ/Mh+FnaYHRaK/CHi2xFbbGNtgW22Estsc47IAdsVPj78hxnM6YgF0wEbtiN+yOSdgDe2IvTMbemIJ9MBX7Yhr2w3TsjwNwIGbgIByMQzATh2IWZmMODsPhOAJH4igcjWNwLI7DXByPEzAP83EiTsLJOAWnYgFOw0KcjkU4A2fiLCzG2ViCpTgH5+I8nI8LcCEuwsW4BJfiMlyOflyBZbgSy7ECV+FqrMQ1uBarcB1W43rcgOHzGMCNWIt1uAk34xbcituwHrfjDtyJu3A3HoFH4lG4p8wmQ5Tjc9eV+8MvqqlDIzQu3Eafeehj9sIp/trymsZ/szFdMiaW7k/el3tg1hxuccn8A4sjf6KmLXYjeZVu5E/UtMWeSF6lJ/InatpibySv0hv5EzVtsS+SV+mL7ImiD7l8D33k+QOByvJAcFcHN03w3yT4LYeePfwFDvcKisr9G+sCoWMRmnjNWOHaCrc5Kzy2wtOcFV5b4W3OCp+t8IU+zd4e7W1oaGhgRkUF3/5ENXr7879va4IrdjvRrr+6rLKqKnxNHI3H4LF4HB6PJ+CJeBKejKfgqXgano5n4Jl4Fp6N5+C5eB6ejxfghXgRXoyX4KV4GV6OV+CVeBVejdfgtXgdXo834I14E96Mt+CteBvejnfgnXgX3o334L14H96PD+CD+BA+jI/go/gYPo5P4JP4FD6Nz+Cz+Bw+jy/gi/gSvoyv4Kv4Gr6Ob+Cb+Ba+je/gu/gevo8f4If4EX6Mn+Cn+Bl+jl/gl/gVfo3f4Lf4HX6PP+CP+BP+jL/gr/gb/o5/4J+4D//C/fg3/oP/op38RjPD5QOXdywu71hc3rG4zAOXeeAyD1zmgRv+b05wgASnUejK5ANv+AP7egeGTPTB2eFqejS9mj7NKM0WmtGaMZotNVtpttZso9lWs51mrGZ7zTjNDpodNTtpxmt21kzQ7KKZqNlVs5tmd80kzR6aPTV7aSZr9tZM0eyjmarZVzNNs59mumZ/zQGaAzUzNAdpDtYcopmpOVQzSzNbM0dzmOZwzRGaIzVHaY7WHKM5VnOcZq7meM0Jmnma+ZoTNSdpTtacojlVs0Bzmmah5nTNIs0ZmjM1Z2kWa87WLNEs1ZyjOVdznuZ8zQWaCzUXaS7WXKK5VHOZ5nJNv+YKzTLNlZrlmhWaqzRXa1ZqrtFcq1mluU6zWnO95gbNGs2A5kbNWs06zU2amzW3aG7V3KZZr7ldc4fmTs1dmuHb38P16uMiDd6e3JMtuRFbc/e15ZaL5T6L4+bqyB0Vz22UwL2TyA3TjbskiVujJ/dDMjdBCjM/lemexhxPZ2IPYDZnMIUHM28zmaxZzNAcpuVw5uJIJuBoZt1Yplou82sCkyqfmWSDyKaPjRybMzZcbKLYGLHZYQPDpoSNBpsHNgTs5NtxtzNuB9tOsx1hO7d2WO2E2rG0s2gH0E6dHTU7X+GTZMfHzowdFDsddiTsHNjmtx1v29z2tm1o28W2dW2/2ia1nWnb0fagbTzbbbbFbF/ZZrIdZNvG9optENsVthXs51v2sy37uZb9TGvPf76GqrQ=",
+          "__type__": "QuantumCircuit"
+        },
+        {
+          "__value__": "eJyb7BfqGxDJyFDGUK2eklqcXKRupaBuk2ahrqOgnpZfVFKUmBefX5SSChJ3S8wpTtVRUC/OSCxIVbdS0DDQ0dRRqFWgAHABAFOzG1s=",
+          "__type__": "ndarray"
+        },
+        1024
+      ]
+    ],
+    "support_qiskit": true,
+    "version": 2,
+    "options": {}
+  },
+  "program": {
+    "id": "sampler"
+  },
+  "user_id": "IBMid-698001AVST",
+  "created": "2025-12-11T23:27:46.671612Z",
+  "cost": 600,
+  "status": "Completed"
+}

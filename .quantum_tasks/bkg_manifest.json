@@ -1,0 +1,41 @@
+{
+  "generated_at": "2025-12-12T00:07:12.571103",
+  "generated_by": "opus",
+  "queue_status": {
+    "timestamp": "2025-12-12T00:07:12.570814",
+    "pending_count": 1,
+    "active_task": null,
+    "budget_used_seconds": 0.0,
+    "budget_remaining_seconds": 600.0,
+    "budget_percentage": 0.0
+  },
+  "tasks_for_bkg": [
+    {
+      "id": "task-1599d941",
+      "name": "Quantum Heartbeat",
+      "type": "bell_state",
+      "can_prepare": true,
+      "can_execute": false,
+      "suggested_action": "Prepare circuit file and documentation"
+    }
+  ],
+  "instructions": {
+    "read_first": ".quantum_tasks/bkg_instructions.md",
+    "update_status": ".quantum_tasks/bkg_status.json",
+    "task_queue": ".quantum_tasks/pending.json"
+  },
+  "capabilities_reminder": {
+    "can_do": [
+      "Read/write any file",
+      "Create circuit definitions",
+      "Write documentation",
+      "Organize task queue",
+      "Generate reports"
+    ],
+    "cannot_do": [
+      "Run terminal commands",
+      "Execute on IBM Quantum",
+      "Git operations"
+    ]
+  }
+}
