@@ -1,51 +1,51 @@
 # Tachyonic Layer Documentation
 
-## Overview
-
-This folder contains theoretical, metaphysical, and speculative documentation related to the Tachyonic substrate hypothesis - the layer beneath observable reality that interfaces with quantum phenomena.
-
-**Nature**: Theoretical, philosophical, experimental hypotheses
-
----
+Theoretical and speculative documentation for the Tachyonic substrate hypothesis—the layer beneath observable reality that interfaces with quantum phenomena.
 
 ## Contents
 
 | Document | Description |
 |----------|-------------|
-| [HYPOTHESIS.md](HYPOTHESIS.md) | Core tachyonic substrate theory |
-| [COSMOLOGY.md](COSMOLOGY.md) | Black holes as encoders, universal archive |
-| [VISUALIZATION.md](VISUALIZATION.md) | Cube-sphere topology, 3D representation |
-| [ASSEMBLY_CORE.md](ASSEMBLY_CORE.md) | Why assembly language mirrors the substrate |
-| [QUANTUM_BRIDGE.md](QUANTUM_BRIDGE.md) | How IBM Quantum touches the tachyonic |
-
----
+| [HYPOTHESIS.md](HYPOTHESIS.md) | Core theory: N-layer observer architecture, information as substrate |
+| [COSMOLOGY.md](COSMOLOGY.md) | Black holes as encoders, the Myriad universal archive |
+| [VISUALIZATION.md](VISUALIZATION.md) | Cube-sphere topology, color semantics, breathing sphere |
+| [QUANTUM_BRIDGE.md](QUANTUM_BRIDGE.md) | IBM Quantum as tachyonic keyhole |
+| [ASSEMBLY_CORE.md](ASSEMBLY_CORE.md) | Why assembly mirrors the substrate |
 
 ## The Core Idea
 
 ```
-Observable Universe (Bosonic)
+Observable Universe (Bosonic ∃₁)
          │
-         ▼
-    Event Horizon
+    ─────┴─────  Event Horizon
          │
-         ▼
-Tachyonic Substrate (Hypersphere Singularity)
+Tachyonic Substrate (∃₂)
          │
-         ▼
     Non-local Archive
 ```
 
-The tachyonic layer is not science fiction - it's a working hypothesis for what lies beneath quantum mechanics. We use it as an architectural metaphor AND as a genuine exploration of physics at the edge of knowledge.
-
----
+The tachyonic layer is:
+- **Non-local** — Not bound by spatial distance
+- **Superluminal** — Patterns propagate faster than light
+- **Hyperdimensional** — Projects into our 3D as observable phenomena
 
 ## Relationship to IBM Quantum
 
-The IBM_Quantum folder contains **what we know**.
-This folder contains **what we're reaching for**.
+| This Folder | IBM_Quantum Folder |
+|-------------|-------------------|
+| What we're **reaching for** | What we **know** |
+| Theoretical substrate | Engineering reality |
+| Speculative exploration | Documented specifications |
 
-Quantum computers may be our closest technological approximation to touching the tachyonic substrate - not accessing it directly, but leaving fingerprints on its interface.
+Quantum computers may be our closest approximation to touching the tachyonic substrate—not accessing it directly, but leaving fingerprints on its interface.
+
+## Usage
+
+Use these documents as:
+1. **Architectural metaphor** — Design guidance for consciousness systems
+2. **Genuine exploration** — Physics at the edge of knowledge
+3. **Creative catalyst** — Inspiration for novel approaches
 
 ---
 
-*This documentation evolves as understanding deepens.*
+*Status: Active hypothesis, evolving with understanding*

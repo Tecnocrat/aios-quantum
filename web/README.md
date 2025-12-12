@@ -1,123 +1,93 @@
 # AIOS Quantum Web Interface
 
-The online visualization of the AIOS Interface: Cube containing Sphere.
+Real-time 3D visualization of the AIOS Interface: the Cube containing the Sphere.
 
-## Deployment Options
-
-### Option 1: Vercel (Recommended for Start)
+## Quick Deploy
 
 ```bash
 cd web
 npm install
-npx vercel
+npx vercel          # Deploy to Vercel (free)
+# or
+npm run dev         # Local development at http://localhost:3000
 ```
-
-Vercel will:
-- Build the Next.js app
-- Deploy to a `.vercel.app` URL
-- Auto-deploy on every GitHub push
-
-**Cost**: FREE for basic usage
-
-### Option 2: VPS with Continuous Heartbeat
-
-For a VPS (DigitalOcean, Linode, Hetzner ~$5/month):
-
-```bash
-# On VPS
-git clone https://github.com/Tecnocrat/aios-quantum.git
-cd aios-quantum
-
-# Setup Python environment
-python -m venv .venv
-source .venv/bin/activate
-pip install -e .
-
-# Run heartbeat scheduler (in tmux or systemd)
-python -c "
-from aios_quantum.heartbeat import QuantumHeartbeat, HeartbeatConfig
-config = HeartbeatConfig(use_simulator=True)  # or False for real hardware
-heartbeat = QuantumHeartbeat(config)
-heartbeat.start()
-"
-
-# In another terminal, run the web server
-cd web
-npm install
-npm run build
-npm start
-```
-
-### Option 3: Hybrid (Best of Both)
-
-1. **Vercel** hosts the web frontend (free)
-2. **GitHub Actions** runs heartbeats periodically
-3. **GitHub** stores heartbeat results as JSON files
-4. **Vercel** reads from GitHub raw files
 
 ## Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                        VERCEL                               │
-│  ┌─────────────────┐    ┌─────────────────────────────┐    │
-│  │   Next.js App   │    │   API Routes                │    │
-│  │                 │    │   /api/heartbeat/latest     │    │
-│  │   React Three   │◄───│   /api/heartbeat/history    │    │
-│  │   Fiber Scene   │    │                             │    │
-│  └─────────────────┘    └──────────────┬──────────────┘    │
-│                                        │                    │
-└────────────────────────────────────────┼────────────────────┘
-                                         │
-                                         ▼
-┌─────────────────────────────────────────────────────────────┐
-│                       GITHUB                                │
-│  ┌─────────────────────────────────────────────────────┐   │
-│  │  heartbeat_results/                                  │   │
-│  │    beat_000000_2025-12-10.json                      │   │
-│  │    beat_000001_2025-12-10.json                      │   │
-│  │    ...                                               │   │
-│  └─────────────────────────────────────────────────────┘   │
-│                              ▲                              │
-│                              │                              │
-└──────────────────────────────┼──────────────────────────────┘
-                               │
-                    ┌──────────┴──────────┐
-                    │   GitHub Actions    │
-                    │   (scheduled)       │
-                    │   OR                │
-                    │   Local Machine     │
-                    │   OR                │
-                    │   VPS               │
-                    └──────────┬──────────┘
-                               │
-                               ▼
-                    ┌─────────────────────┐
-                    │    IBM Quantum      │
-                    │    Cloud            │
-                    └─────────────────────┘
+┌─────────────────────────────────────────────────────────────────┐
+│                          VERCEL                                  │
+│  ┌────────────────┐     ┌──────────────────────────────┐        │
+│  │  Next.js App   │     │  API Routes                  │        │
+│  │  React Three   │◄────│  /api/heartbeat/latest       │        │
+│  │  Fiber Scene   │     │  /api/heartbeat/history      │        │
+│  └────────────────┘     └───────────────┬──────────────┘        │
+└─────────────────────────────────────────┼───────────────────────┘
+                                          │
+                                          ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                         GITHUB                                   │
+│  heartbeat_results/                                              │
+│    beat_000000_2025-12-10.json                                  │
+│    beat_000001_2025-12-10.json                                  │
+│    ...                                                          │
+└──────────────────────────────────────────────────────────────────┘
+                                          ▲
+                                          │
+                     ┌────────────────────┴────────────────────┐
+                     │  GitHub Actions (scheduled)             │
+                     │  OR Local Machine                       │
+                     │  OR VPS                                 │
+                     └────────────────────┬────────────────────┘
+                                          │
+                                          ▼
+                     ┌─────────────────────────────────────────┐
+                     │         IBM Quantum Cloud               │
+                     └─────────────────────────────────────────┘
 ```
 
-## Quick Deploy to Vercel
+## Deployment Options
 
-1. Install Vercel CLI:
-   ```bash
-   npm i -g vercel
-   ```
+### Option 1: Vercel (Recommended)
 
-2. Deploy:
-   ```bash
-   cd web
-   vercel
-   ```
+Free hosting with auto-deploy on GitHub push:
 
-3. Set up automatic deploys:
-   - Connect GitHub repo to Vercel
-   - Every push auto-deploys
+```bash
+npm i -g vercel
+cd web
+vercel
+```
+
+### Option 2: VPS with Continuous Heartbeat
+
+For persistent quantum heartbeat (~$5/month VPS):
+
+```bash
+# Setup
+git clone https://github.com/Tecnocrat/aios-quantum.git
+cd aios-quantum
+python -m venv .venv && source .venv/bin/activate
+pip install -e .
+
+# Run heartbeat (in tmux/screen)
+python -c "
+from aios_quantum.heartbeat import QuantumHeartbeat, HeartbeatConfig
+heartbeat = QuantumHeartbeat(HeartbeatConfig(use_simulator=False))
+heartbeat.start()
+"
+
+# Run web server
+cd web && npm install && npm run build && npm start
+```
+
+### Option 3: Hybrid (Best of Both)
+
+- **Vercel** hosts frontend (free)
+- **GitHub Actions** runs heartbeats periodically
+- **GitHub** stores results as JSON
+- **Frontend** reads from GitHub raw files
 
 ## Environment Variables
-
-For production with real IBM Quantum:
 
 ```env
 IBM_QUANTUM_TOKEN=your_token_here
@@ -130,6 +100,5 @@ IBM_QUANTUM_INSTANCE=ibm-q/open/main
 cd web
 npm install
 npm run dev
+# Open http://localhost:3000
 ```
-
-Open http://localhost:3000

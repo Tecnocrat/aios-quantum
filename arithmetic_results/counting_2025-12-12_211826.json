@@ -1,0 +1,91 @@
+{
+  "test": "counting",
+  "backend": "simulator",
+  "max_count": 7,
+  "results": [
+    {
+      "operation": "0+1",
+      "expected": 1,
+      "most_likely": 1,
+      "accuracy": 1.0,
+      "error_distribution": {},
+      "circuit_depth": 5,
+      "backend": "simulator",
+      "coherence_score": 1.0,
+      "timestamp": "2025-12-12T20:18:26.921259+00:00",
+      "job_id": null
+    },
+    {
+      "operation": "1+1",
+      "expected": 2,
+      "most_likely": 2,
+      "accuracy": 1.0,
+      "error_distribution": {},
+      "circuit_depth": 6,
+      "backend": "simulator",
+      "coherence_score": 1.0,
+      "timestamp": "2025-12-12T20:18:26.931615+00:00",
+      "job_id": null
+    },
+    {
+      "operation": "2+1",
+      "expected": 3,
+      "most_likely": 3,
+      "accuracy": 1.0,
+      "error_distribution": {},
+      "circuit_depth": 6,
+      "backend": "simulator",
+      "coherence_score": 1.0,
+      "timestamp": "2025-12-12T20:18:26.941658+00:00",
+      "job_id": null
+    },
+    {
+      "operation": "3+1",
+      "expected": 4,
+      "most_likely": 4,
+      "accuracy": 1.0,
+      "error_distribution": {},
+      "circuit_depth": 6,
+      "backend": "simulator",
+      "coherence_score": 1.0,
+      "timestamp": "2025-12-12T20:18:26.952226+00:00",
+      "job_id": null
+    },
+    {
+      "operation": "4+1",
+      "expected": 5,
+      "most_likely": 5,
+      "accuracy": 1.0,
+      "error_distribution": {},
+      "circuit_depth": 6,
+      "backend": "simulator",
+      "coherence_score": 1.0,
+      "timestamp": "2025-12-12T20:18:26.964261+00:00",
+      "job_id": null
+    },
+    {
+      "operation": "5+1",
+      "expected": 6,
+      "most_likely": 6,
+      "accuracy": 1.0,
+      "error_distribution": {},
+      "circuit_depth": 6,
+      "backend": "simulator",
+      "coherence_score": 1.0,
+      "timestamp": "2025-12-12T20:18:26.976111+00:00",
+      "job_id": null
+    },
+    {
+      "operation": "6+1",
+      "expected": 7,
+      "most_likely": 7,
+      "accuracy": 1.0,
+      "error_distribution": {},
+      "circuit_depth": 6,
+      "backend": "simulator",
+      "coherence_score": 1.0,
+      "timestamp": "2025-12-12T20:18:26.986550+00:00",
+      "job_id": null
+    }
+  ]
+}

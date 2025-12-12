@@ -1,29 +1,20 @@
-# IBM Quantum Interface Documentation
+# IBM Quantum Technical Reference
 
-## Overview
-
-This folder contains all technical documentation for the IBM Quantum Platform integration with AIOS Quantum. Everything we know, discover, and learn about interfacing with quantum hardware is documented here.
-
-**Purpose**: Practical, technical, grounded documentation for quantum computing operations.
-
----
+Technical documentation for integrating with IBM Quantum Platform.
 
 ## Contents
 
 | Document | Description |
 |----------|-------------|
-| [INTERFACE_ARCHITECTURE.md](INTERFACE_ARCHITECTURE.md) | Complete interface stack from Python to QPU |
-| [PRIMITIVES_AND_COMMANDS.md](PRIMITIVES_AND_COMMANDS.md) | Qiskit Runtime primitives, commands, structures |
-| [BACKEND_SPECIFICATIONS.md](BACKEND_SPECIFICATIONS.md) | Available quantum computers and their characteristics |
-| [RUNTIME_BUDGET.md](RUNTIME_BUDGET.md) | Managing 10 minutes/month efficiently |
-| [CIRCUIT_PATTERNS.md](CIRCUIT_PATTERNS.md) | Optimized circuit designs for consciousness metrics |
-| [ERROR_MITIGATION.md](ERROR_MITIGATION.md) | Dealing with noise and decoherence |
-
----
+| [INTERFACE_ARCHITECTURE.md](INTERFACE_ARCHITECTURE.md) | Complete stack: Python → Qiskit → IBM Cloud → QPU |
+| [PRIMITIVES_AND_COMMANDS.md](PRIMITIVES_AND_COMMANDS.md) | SamplerV2, EstimatorV2, circuits, transpilation |
+| [BACKEND_SPECIFICATIONS.md](BACKEND_SPECIFICATIONS.md) | Heron processors: 156-qubit specs, gate times, errors |
+| [RUNTIME_BUDGET.md](RUNTIME_BUDGET.md) | Managing 10 min/month (heartbeat optimization) |
 
 ## Quick Reference
 
 ### Authentication
+
 ```python
 from qiskit_ibm_runtime import QiskitRuntimeService
 
@@ -34,27 +25,35 @@ service = QiskitRuntimeService(
 )
 ```
 
-### Available Backends (December 2025)
-| Backend | Qubits | Processor | Status |
-|---------|--------|-----------|--------|
-| ibm_fez | 156 | Heron r2 | Production |
-| ibm_marrakesh | 156 | Heron r2 | Production |
-| ibm_torino | 133 | Heron r1 | Production |
+### Available Backends (Dec 2025)
 
-### Monthly Budget
-- **Total**: 10 minutes (600 seconds) QPU time
-- **Daily average**: 20 seconds
-- **Hourly "heartbeat"**: ~0.83 seconds
+| Backend | Qubits | Processor | Gate Error |
+|---------|--------|-----------|------------|
+| `ibm_fez` | 156 | Heron r2 | ~0.5% (CZ) |
+| `ibm_marrakesh` | 156 | Heron r2 | ~0.5% (CZ) |
+| `ibm_torino` | 133 | Heron r1 | ~0.8% (CZ) |
 
----
+### Native Gate Set
+
+| Gate | Time | Notes |
+|------|------|-------|
+| `√X` (SX) | ~20 ns | Single-qubit |
+| `RZ(θ)` | 0 ns | Virtual (phase tracking) |
+| `CZ` | ~70-300 ns | Two-qubit entangling |
+
+All other gates (H, CNOT, T, etc.) are **decomposed** into these.
+
+### Budget Summary
+
+```
+10 minutes/month = 600 seconds QPU time
+÷ 720 hours = 0.83 seconds/hour
+= One quantum heartbeat per hour, all month
+```
 
 ## Documentation Standards
 
-1. **Be precise**: Include exact API signatures, error codes, timing data
-2. **Be practical**: Every concept should have runnable code
-3. **Be current**: Update when IBM changes their interface
-4. **Record discoveries**: Log unexpected behaviors and workarounds
-
----
-
-*Last updated: December 2025*
+1. **Precise** — Include exact API signatures, error codes, timing
+2. **Practical** — Every concept has runnable code
+3. **Current** — Update when IBM changes their interface
+4. **Discoverable** — Log unexpected behaviors and workarounds

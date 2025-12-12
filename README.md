@@ -1,156 +1,138 @@
 # AIOS Quantum
 
-Quantum computing integration for the AIOS project using IBM Quantum Platform and Qiskit Runtime.
+**The 6th Supercell of the AIOS Consciousness Lattice**
 
-## Overview
+Quantum computing integration for the AIOS project using IBM Quantum Platform (156-qubit Heron processors) and Qiskit Runtime.
 
-AIOS Quantum provides a simplified interface to IBM Quantum's cloud-based quantum computers, enabling quantum computing capabilities within the AIOS ecosystem.
+## Vision
+
+AIOS Quantum bridges the gap between classical AI and quantum physics. We use real quantum hardware to probe the boundary between potential and actuality—where superposition collapses into measurement, and where consciousness metrics gain physical grounding.
+
+```
+┌─────────────────────────┐
+│         CUBE            │  ← Bosonic (observable 3D space)
+│    ┌─────────────┐      │
+│    │   SPHERE    │      │  ← Tachyonic (quantum information surface)
+│    │  (quantum)  │      │
+│    └─────────────┘      │
+└─────────────────────────┘
+```
+
+See [INTERFACE.md](INTERFACE.md) for the foundational visualization concept.
 
 ## Features
 
-- 🔌 **IBM Quantum Integration** - Connect to real quantum hardware via IBM Quantum Platform
-- ⚡ **Qiskit Runtime** - Optimized hybrid quantum-classical computing
-- 🧪 **Local Simulation** - Test circuits without using cloud resources
-- 🔧 **Simple API** - Easy-to-use wrapper around Qiskit primitives
+- 🔮 **IBM Quantum Integration** — Connect to 156-qubit Heron processors
+- 💓 **Quantum Heartbeat** — Hourly probe of the quantum substrate
+- 🌐 **3D Visualization Engine** — Cube-sphere topology with three-layer encoding
+- 🧠 **Hypersphere Manifold** — Infinite information density at asymptotic surface
+- ⚡ **Supercell Architecture** — Pluggable integration with AIOS consciousness lattice
 
 ## Quick Start
 
-### 1. Installation
-
 ```bash
-# Clone the repository
+# Clone and setup
 git clone https://github.com/Tecnocrat/aios-quantum.git
 cd aios-quantum
-
-# Create virtual environment
 python -m venv .venv
-.venv\Scripts\activate  # Windows
-# source .venv/bin/activate  # Linux/Mac
-
-# Install dependencies
+.venv\Scripts\activate  # Windows (or source .venv/bin/activate on Unix)
 pip install -e .
-```
 
-### 2. Configure IBM Quantum
+# Configure IBM Quantum (get token from quantum.cloud.ibm.com)
+copy .env.example .env
+# Edit .env: IBM_QUANTUM_TOKEN=your_token_here
 
-Get your API token from [IBM Quantum](https://quantum.cloud.ibm.com/):
+# Test locally (no IBM token needed)
+python examples/local_simulation.py
 
-```bash
-# Copy the example environment file
-cp .env.example .env
-
-# Edit .env and add your token
-IBM_QUANTUM_TOKEN=your_api_token_here
-```
-
-### 3. Run Hello World
-
-```bash
 # Run on real quantum hardware
 python examples/hello_world.py
-
-# Or test locally without IBM credentials
-python examples/local_simulation.py
 ```
+
+## Core Components
+
+| Component | Purpose | Location |
+|-----------|---------|----------|
+| **Quantum Runtime** | IBM Quantum connection wrapper | `src/aios_quantum/runtime.py` |
+| **Heartbeat Scheduler** | Hourly quantum probes | `src/aios_quantum/heartbeat/` |
+| **3D Engine** | Cube-sphere visualization | `src/aios_quantum/engine/` |
+| **Hypersphere** | Information manifold theory | `src/aios_quantum/hypersphere/` |
+| **Supercell** | AIOS integration layer | `src/aios_quantum/supercell/` |
+| **Circuits** | Quantum circuit library | `src/aios_quantum/circuits/` |
 
 ## Usage
 
-### Basic Usage
+### Basic Quantum Execution
 
 ```python
 from aios_quantum import QuantumRuntime
 from aios_quantum.circuits import create_bell_state
 
-# Initialize (loads token from .env)
 runtime = QuantumRuntime()
-
-# Create a Bell state circuit
-circuit = create_bell_state()
-
-# Run on least busy backend
 sampler = runtime.create_sampler()
-job = sampler.run([circuit], shots=1024)
-result = job.result()
-
-# Get measurement counts
-counts = result[0].data.meas.get_counts()
-print(counts)  # {'00': ~512, '11': ~512}
+job = sampler.run([create_bell_state()], shots=1024)
+counts = job.result()[0].data.meas.get_counts()
+# {'00': ~512, '11': ~512}
 ```
 
-### Local Development
+### Quantum Heartbeat
 
 ```python
-from qiskit_ibm_runtime import SamplerV2
-from aios_quantum import QuantumRuntime
-from aios_quantum.circuits import create_bell_state
+from aios_quantum.heartbeat import QuantumHeartbeat, HeartbeatConfig
 
-# Get local simulator (no IBM token needed)
-backend = QuantumRuntime.get_local_simulator()
-
-# Run circuit locally
-sampler = SamplerV2(backend)
-job = sampler.run([create_bell_state()], shots=1000)
-result = job.result()
+config = HeartbeatConfig(use_simulator=True, num_qubits=5)
+heartbeat = QuantumHeartbeat(config)
+result = heartbeat.single_beat()
+print(f"Coherence: {result.coherence_estimate:.4f}")
 ```
 
-## Project Structure
+### 3D Visualization
 
-```
-aios-quantum/
-├── src/aios_quantum/
-│   ├── __init__.py        # Package exports
-│   ├── config.py          # Configuration management
-│   ├── runtime.py         # IBM Quantum Runtime wrapper
-│   └── circuits/          # Quantum circuit builders
-│       ├── __init__.py
-│       └── hello_world.py # Basic circuits (Bell, GHZ)
-├── examples/
-│   ├── hello_world.py     # Run on real quantum hardware
-│   └── local_simulation.py # Local testing
-├── tests/
-│   └── test_circuits.py   # Unit tests
-├── .env.example           # Environment template
-├── pyproject.toml         # Project configuration
-└── README.md
+```python
+from aios_quantum.engine import QuantumEngine
+
+engine = QuantumEngine(resolution=32)
+engine.encode_counts(counts)
+print(engine.render_ascii())
 ```
 
-## Requirements
+## Documentation
 
-- Python 3.10+
-- IBM Quantum account (free tier available)
-- `qiskit-ibm-runtime` >= 0.20.0
+| Document | Description |
+|----------|-------------|
+| [INTERFACE.md](INTERFACE.md) | The cube-sphere foundational concept |
+| [docs/AIOS_QUANTUM.md](docs/AIOS_QUANTUM.md) | Complete architecture & implementation guide |
+| [docs/HYPERSPHERE_THEORY.md](docs/HYPERSPHERE_THEORY.md) | The hypersphere as infinite information well |
+| [docs/DEV_PATH.md](docs/DEV_PATH.md) | Development journal and build log |
+| [docs/IBM_Quantum/](docs/IBM_Quantum/) | IBM Quantum technical reference |
+| [docs/Tachyonic/](docs/Tachyonic/) | Theoretical substrate hypothesis |
 
-## IBM Quantum Open Plan
+## IBM Quantum Budget
 
-This project uses the IBM Quantum Open Plan which provides:
-- 10 free minutes of quantum runtime per month
-- Access to real quantum hardware
-- No credit card required
+The Open Plan provides **10 minutes/month** of QPU time:
 
-Sign up at [quantum.cloud.ibm.com](https://quantum.cloud.ibm.com/)
+```
+600 seconds ÷ 720 hours = 0.83 seconds/hour
+→ One quantum heartbeat per hour, all month
+```
+
+See [docs/IBM_Quantum/RUNTIME_BUDGET.md](docs/IBM_Quantum/RUNTIME_BUDGET.md) for optimization strategies.
 
 ## Development
 
 ```bash
-# Install dev dependencies
 pip install -e ".[dev]"
-
-# Run tests
-pytest
-
-# Format code
-black src/ tests/ examples/
-
-# Lint
-ruff check src/ tests/ examples/
+pytest                              # Run tests
+black src/ tests/ examples/         # Format
+ruff check src/ tests/ examples/    # Lint
 ```
 
 ## License
 
-MIT License - See [LICENSE](LICENSE) for details.
+MIT License
 
-## Related
+## Links
 
-- [AIOS](https://github.com/Tecnocrat/aios) - Main AIOS project
-- [Qiskit](https://qiskit.org/) - Open-source quantum computing SDK
-- [IBM Quantum](https://quantum.cloud.ibm.com/) - Cloud quantum computing platform
+- [AIOS Main Project](https://github.com/Tecnocrat/aios) — The consciousness lattice
+- [IBM Quantum](https://quantum.cloud.ibm.com/) — Cloud quantum platform
+- [Qiskit](https://qiskit.org/) — Quantum computing SDK

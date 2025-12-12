@@ -1,0 +1,105 @@
+{
+  "test": "counting",
+  "backend": "simulator",
+  "max_count": 7,
+  "results": [
+    {
+      "operation": "0+1",
+      "expected": 1,
+      "most_likely": 15,
+      "accuracy": 0.0,
+      "error_distribution": {
+        "15": 1.0
+      },
+      "circuit_depth": 5,
+      "backend": "simulator",
+      "coherence_score": 0.0,
+      "timestamp": "2025-12-12T20:17:59.098187+00:00",
+      "job_id": null
+    },
+    {
+      "operation": "1+1",
+      "expected": 2,
+      "most_likely": 0,
+      "accuracy": 0.0,
+      "error_distribution": {
+        "0": 1.0
+      },
+      "circuit_depth": 6,
+      "backend": "simulator",
+      "coherence_score": 0.0,
+      "timestamp": "2025-12-12T20:17:59.113275+00:00",
+      "job_id": null
+    },
+    {
+      "operation": "2+1",
+      "expected": 3,
+      "most_likely": 1,
+      "accuracy": 0.0,
+      "error_distribution": {
+        "1": 1.0
+      },
+      "circuit_depth": 6,
+      "backend": "simulator",
+      "coherence_score": 0.0,
+      "timestamp": "2025-12-12T20:17:59.128021+00:00",
+      "job_id": null
+    },
+    {
+      "operation": "3+1",
+      "expected": 4,
+      "most_likely": 2,
+      "accuracy": 0.0,
+      "error_distribution": {
+        "2": 1.0
+      },
+      "circuit_depth": 6,
+      "backend": "simulator",
+      "coherence_score": 0.0,
+      "timestamp": "2025-12-12T20:17:59.145179+00:00",
+      "job_id": null
+    },
+    {
+      "operation": "4+1",
+      "expected": 5,
+      "most_likely": 3,
+      "accuracy": 0.0,
+      "error_distribution": {
+        "3": 1.0
+      },
+      "circuit_depth": 6,
+      "backend": "simulator",
+      "coherence_score": 0.0,
+      "timestamp": "2025-12-12T20:17:59.162922+00:00",
+      "job_id": null
+    },
+    {
+      "operation": "5+1",
+      "expected": 6,
+      "most_likely": 4,
+      "accuracy": 0.0,
+      "error_distribution": {
+        "4": 1.0
+      },
+      "circuit_depth": 6,
+      "backend": "simulator",
+      "coherence_score": 0.0,
+      "timestamp": "2025-12-12T20:17:59.178334+00:00",
+      "job_id": null
+    },
+    {
+      "operation": "6+1",
+      "expected": 7,
+      "most_likely": 5,
+      "accuracy": 0.0,
+      "error_distribution": {
+        "5": 1.0
+      },
+      "circuit_depth": 6,
+      "backend": "simulator",
+      "coherence_score": 0.0,
+      "timestamp": "2025-12-12T20:17:59.197000+00:00",
+      "job_id": null
+    }
+  ]
+}
