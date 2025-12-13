@@ -11,8 +11,26 @@ on:
   schedule:
     - cron: '0 * * * *'
   
-  # Allow manual trigger
+  # Allow manual trigger with options
   workflow_dispatch:
+    inputs:
+      use_simulator:
+        description: 'Use simulator instead of real quantum'
+        required: false
+        default: 'false'
+        type: choice
+        options:
+          - 'true'
+          - 'false'
+      backend_override:
+        description: 'Override backend (leave empty for rotation)'
+        required: false
+        default: ''
+        type: string
+
+env:
+  # Backend rotation sequence (Eagle + Heron processors)
+  BACKEND_ROTATION: "ibm_brisbane,ibm_kyoto,ibm_osaka,ibm_fez,ibm_torino"
 
 jobs:
   heartbeat:
@@ -34,24 +52,55 @@ jobs:
       
       - name: Install dependencies
         run: |
-          pip install qiskit qiskit-ibm-runtime
+          pip install qiskit qiskit-ibm-runtime python-dotenv
           pip install -e .
       
-      - name: Run heartbeat (simulator)
+      - name: Run heartbeat
+        env:
+          IBM_QUANTUM_TOKEN: ${{ secrets.IBM_QUANTUM_TOKEN }}
+          IBM_QUANTUM_CHANNEL: ${{ secrets.IBM_QUANTUM_CHANNEL }}
+          IBM_QUANTUM_INSTANCE: ${{ secrets.IBM_QUANTUM_INSTANCE }}
+          USE_SIMULATOR: ${{ github.event.inputs.use_simulator || 'false' }}
+          BACKEND_OVERRIDE: ${{ github.event.inputs.backend_override || '' }}
         run: |
           python -c "
+          import os
           from aios_quantum.heartbeat import QuantumHeartbeat, HeartbeatConfig
           
+          # Determine if using simulator
+          use_sim = os.environ.get('USE_SIMULATOR', 'false').lower() == 'true'
+          backend_override = os.environ.get('BACKEND_OVERRIDE', '').strip()
+          
+          # Parse backend rotation from env
+          rotation_str = os.environ.get('BACKEND_ROTATION', '')
+          backend_rotation = [b.strip() for b in rotation_str.split(',') if b.strip()]
+          
+          # Override rotation if specific backend requested
+          if backend_override:
+              backend_rotation = [backend_override]
+              print(f'Using override backend: {backend_override}')
+          elif backend_rotation:
+              print(f'Backend rotation: {backend_rotation}')
+          
           config = HeartbeatConfig(
-              use_simulator=True,
+              use_simulator=use_sim,
               num_qubits=5,
               shots=1024,
+              backend_rotation=backend_rotation if not use_sim else None,
           )
           
           heartbeat = QuantumHeartbeat(config)
           result = heartbeat.single_beat()
           
-          print(f'Heartbeat complete: coherence={result.coherence_estimate:.4f}')
+          if result:
+              print(f'✓ Heartbeat complete')
+              print(f'  Source: {result.source}')
+              print(f'  Backend: {result.backend_name}')
+              print(f'  Family: {result.backend_family} {result.backend_processor}')
+              print(f'  Coherence: {result.coherence_estimate:.4f}')
+          else:
+              print('✗ Heartbeat failed')
+              exit(1)
           "
       
       - name: Commit results
@@ -61,6 +110,6 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add heartbeat_results/
-          git diff --staged --quiet || git commit -m "Heartbeat $(date -u +'%Y-%m-%d %H:%M') UTC"
+          git diff --staged --quiet || git commit -m "💓 Heartbeat $(date -u +'%Y-%m-%d %H:%M') UTC"
           # Authenticated push using the workflow token
           git push "https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git" HEAD:${{ github.ref_name }}

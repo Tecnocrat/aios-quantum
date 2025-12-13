@@ -12,7 +12,15 @@ import { useRef, useMemo } from 'react'
 import { useFrame } from '@react-three/fiber'
 import { Line } from '@react-three/drei'
 import * as THREE from 'three'
-import { UnifiedSurface, CLASS_COLORS, CLASS_ICONS } from './types'
+import { 
+  UnifiedSurface, 
+  CLASS_COLORS, 
+  CLASS_ICONS,
+  SourceFilter,
+  BackendFamily,
+  BACKEND_FAMILIES,
+  IBM_BACKENDS
+} from './types'
 
 // =============================================================================
 // SUB-COMPONENTS
@@ -85,20 +93,58 @@ export function TopologyRegions() {
 export function ExperimentVertices({ 
   surfaceData, 
   selectedClass,
+  sourceFilter = 'all',
+  backendFilter = 'all',
   autoRotate = true,
   rotationSpeed = 0.05
 }: { 
   surfaceData: UnifiedSurface
   selectedClass: string | null 
+  sourceFilter?: SourceFilter
+  backendFilter?: BackendFamily
   autoRotate?: boolean
   rotationSpeed?: number
 }) {
   const groupRef = useRef<THREE.Group>(null)
   
   const filteredVertices = useMemo(() => {
-    if (!selectedClass) return surfaceData.vertices
-    return surfaceData.vertices.filter(v => v.metadata.class === selectedClass)
-  }, [surfaceData.vertices, selectedClass])
+    let vertices = surfaceData.vertices
+    
+    // Filter by class
+    if (selectedClass) {
+      vertices = vertices.filter(v => v.metadata.class === selectedClass)
+    }
+    
+    // Filter by source (simulation vs real)
+    if (sourceFilter !== 'all') {
+      vertices = vertices.filter(v => {
+        const backend = v.metadata.backend || ''
+        const isSimulator = backend.includes('simulator') || 
+                           backend.includes('sampler') || 
+                           backend === '' ||
+                           v.metadata.origin === 'simulation'
+        return sourceFilter === 'simulation' ? isSimulator : !isSimulator
+      })
+    }
+    
+    // Filter by backend family
+    if (backendFilter !== 'all') {
+      vertices = vertices.filter(v => {
+        const backend = v.metadata.backend || ''
+        const backendInfo = IBM_BACKENDS[backend]
+        if (backendInfo) {
+          return backendInfo.family === backendFilter
+        }
+        // Fallback for unknown backends
+        if (backendFilter === 'simulator') {
+          return backend.includes('simulator') || backend.includes('sampler')
+        }
+        return false
+      })
+    }
+    
+    return vertices
+  }, [surfaceData.vertices, selectedClass, sourceFilter, backendFilter])
   
   useFrame((state) => {
     if (groupRef.current && autoRotate) {
@@ -206,11 +252,19 @@ export function ExperimentConnections({
 export function HypergateStatsPanel({ 
   surfaceData, 
   selectedClass,
-  onSelectClass
+  onSelectClass,
+  sourceFilter = 'all',
+  onSourceFilterChange,
+  backendFilter = 'all',
+  onBackendFilterChange
 }: { 
   surfaceData: UnifiedSurface | null
   selectedClass: string | null
   onSelectClass: (cls: string | null) => void
+  sourceFilter?: SourceFilter
+  onSourceFilterChange?: (filter: SourceFilter) => void
+  backendFilter?: BackendFamily
+  onBackendFilterChange?: (filter: BackendFamily) => void
 }) {
   const Row = ({ label, value, color }: { label: string; value: string | number; color?: string }) => (
     <p style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 3 }}>
@@ -222,6 +276,10 @@ export function HypergateStatsPanel({
   if (!surfaceData) return null
   
   const stats = surfaceData.statistics
+
+  // Calculate filtered counts
+  const sourceFilters: SourceFilter[] = ['all', 'simulation', 'real']
+  const backendFamilies: BackendFamily[] = ['all', 'eagle', 'heron', 'falcon', 'simulator']
 
   return (
     <div style={{
@@ -246,6 +304,68 @@ export function HypergateStatsPanel({
         <Row label="Vertices" value={surfaceData.vertex_count} />
         <Row label="Connections" value={surfaceData.edge_count} />
       </div>
+      
+      {/* Source Filter (Simulated vs Real) */}
+      {onSourceFilterChange && (
+        <div style={{ marginBottom: 10 }}>
+          <p style={{ marginBottom: 6, fontSize: 9, opacity: 0.7 }}>SOURCE</p>
+          <div style={{ display: 'flex', gap: 3 }}>
+            {sourceFilters.map(filter => (
+              <button
+                key={filter}
+                onClick={() => onSourceFilterChange(filter)}
+                style={{
+                  padding: '4px 8px',
+                  background: sourceFilter === filter 
+                    ? filter === 'real' ? '#00ff88' : filter === 'simulation' ? '#888888' : '#ff00ff'
+                    : 'transparent',
+                  color: sourceFilter === filter 
+                    ? '#000' 
+                    : filter === 'real' ? '#00ff88' : filter === 'simulation' ? '#888888' : '#ff00ff',
+                  border: `1px solid ${filter === 'real' ? '#00ff88' : filter === 'simulation' ? '#888888' : '#ff00ff'}`,
+                  borderRadius: 3,
+                  cursor: 'pointer',
+                  fontSize: 9,
+                  fontFamily: 'monospace',
+                  textTransform: 'capitalize',
+                }}
+              >
+                {filter === 'all' ? '⚡ All' : filter === 'real' ? '🔵 Real' : '⚪ Sim'}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+      
+      {/* Backend Family Filter */}
+      {onBackendFilterChange && (
+        <div style={{ marginBottom: 10 }}>
+          <p style={{ marginBottom: 6, fontSize: 9, opacity: 0.7 }}>BACKEND FAMILY</p>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 3 }}>
+            {backendFamilies.map(family => {
+              const info = BACKEND_FAMILIES[family]
+              return (
+                <button
+                  key={family}
+                  onClick={() => onBackendFilterChange(family)}
+                  style={{
+                    padding: '3px 6px',
+                    background: backendFilter === family ? info.color : 'transparent',
+                    color: backendFilter === family ? '#000' : info.color,
+                    border: `1px solid ${info.color}`,
+                    borderRadius: 3,
+                    cursor: 'pointer',
+                    fontSize: 8,
+                    fontFamily: 'monospace',
+                  }}
+                >
+                  {family === 'all' ? '⚡' : family === 'simulator' ? '💻' : '🔮'} {info.name}
+                </button>
+              )
+            })}
+          </div>
+        </div>
+      )}
       
       {/* Class Filter */}
       <div style={{ marginBottom: 10 }}>

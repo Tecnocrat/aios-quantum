@@ -12,6 +12,8 @@ from .scheduler import (
     HeartbeatConfig,
     HeartbeatResult,
     test_heartbeat,
+    classify_backend,
+    IBM_BACKEND_FAMILIES,
 )
 
 __all__ = [
@@ -19,4 +21,6 @@ __all__ = [
     "HeartbeatConfig",
     "HeartbeatResult",
     "test_heartbeat",
+    "classify_backend",
+    "IBM_BACKEND_FAMILIES",
 ]

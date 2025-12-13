@@ -207,6 +207,49 @@ export const CLASS_ICONS: Record<string, string> = {
 }
 
 // =============================================================================
+// SOURCE AND BACKEND FILTERS
+// =============================================================================
+
+export type SourceFilter = 'all' | 'simulation' | 'real'
+
+export type BackendFamily = 'all' | 'eagle' | 'heron' | 'falcon' | 'simulator' | 'unknown'
+
+export interface HeartbeatFilters {
+  source: SourceFilter
+  backendFamily: BackendFamily
+  selectedBackends: string[]  // Specific backends like ['ibm_brisbane', 'ibm_fez']
+}
+
+export const DEFAULT_FILTERS: HeartbeatFilters = {
+  source: 'all',
+  backendFamily: 'all',
+  selectedBackends: []
+}
+
+// Backend family metadata for UI
+export const BACKEND_FAMILIES: Record<BackendFamily, { name: string; color: string; qubits: number }> = {
+  all: { name: 'All Backends', color: '#ffffff', qubits: 0 },
+  eagle: { name: 'Eagle (127q)', color: '#00ff88', qubits: 127 },
+  heron: { name: 'Heron (133q)', color: '#ff00ff', qubits: 133 },
+  falcon: { name: 'Falcon (27q)', color: '#ffcc00', qubits: 27 },
+  simulator: { name: 'Simulator', color: '#888888', qubits: 0 },
+  unknown: { name: 'Unknown', color: '#444444', qubits: 0 }
+}
+
+// Individual backend metadata
+export const IBM_BACKENDS: Record<string, { family: BackendFamily; processor: string; qubits: number }> = {
+  ibm_brisbane: { family: 'eagle', processor: 'r3', qubits: 127 },
+  ibm_kyoto: { family: 'eagle', processor: 'r3', qubits: 127 },
+  ibm_osaka: { family: 'eagle', processor: 'r3', qubits: 127 },
+  ibm_sherbrooke: { family: 'eagle', processor: 'r3', qubits: 127 },
+  ibm_fez: { family: 'heron', processor: 'r1', qubits: 133 },
+  ibm_torino: { family: 'heron', processor: 'r1', qubits: 133 },
+  ibm_marrakesh: { family: 'heron', processor: 'r2', qubits: 133 },
+  statevector_sampler: { family: 'simulator', processor: '', qubits: 0 },
+  aer_simulator: { family: 'simulator', processor: '', qubits: 0 },
+}
+
+// =============================================================================
 // SHARED VISUALIZATION CONTROLS
 // =============================================================================
 
@@ -218,6 +261,10 @@ export interface VisualizationControls {
   rotationSpeed: number
   selectedClass: string | null
   cameraPosition: [number, number, number]
+  // Heartbeat source filters
+  sourceFilter: SourceFilter
+  backendFilter: BackendFamily
+  selectedBackends: string[]
 }
 
 export const DEFAULT_CONTROLS: VisualizationControls = {
@@ -227,7 +274,11 @@ export const DEFAULT_CONTROLS: VisualizationControls = {
   autoRotate: true,
   rotationSpeed: 0.05,
   selectedClass: null,
-  cameraPosition: [0, 0, 3.5]
+  cameraPosition: [0, 0, 3.5],
+  // Default filter settings
+  sourceFilter: 'all',
+  backendFilter: 'all',
+  selectedBackends: []
 }
 
 // =============================================================================

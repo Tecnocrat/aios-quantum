@@ -56,10 +56,61 @@ class HeartbeatConfig:
     use_simulator: bool = False  # Set True for testing
     dry_run: bool = False  # Log but don't execute
     
+    # Backend rotation (for multi-core scatter pattern)
+    backend_rotation: list = None  # List of backends to cycle through
+    rotation_index_file: str = "heartbeat_results/.rotation_index"
+    
     def beats_remaining(self, used_seconds: float) -> int:
         """Calculate how many heartbeats we can still do this month."""
         remaining = self.max_monthly_seconds - used_seconds
         return int(remaining / self.estimated_seconds_per_beat)
+
+
+# IBM Quantum Backend Family Classification
+# Maps backend names to their processor families for visualization filtering
+IBM_BACKEND_FAMILIES = {
+    # Eagle processors (127 qubits)
+    "ibm_brisbane": ("eagle", "r3"),
+    "ibm_kyoto": ("eagle", "r3"),
+    "ibm_osaka": ("eagle", "r3"),
+    "ibm_sherbrooke": ("eagle", "r3"),
+    "ibm_rensselaer": ("eagle", "r3"),
+    # Heron processors (133 qubits)  
+    "ibm_fez": ("heron", "r1"),
+    "ibm_torino": ("heron", "r1"),
+    "ibm_marrakesh": ("heron", "r2"),
+    "ibm_kawasaki": ("heron", "r2"),
+    # Legacy / Other
+    "ibm_nazca": ("falcon", "r5.11"),
+    "ibm_algiers": ("falcon", "r5.11"),
+    # Simulators
+    "statevector_sampler": ("simulator", ""),
+    "aer_simulator": ("simulator", ""),
+    "qasm_simulator": ("simulator", ""),
+}
+
+def classify_backend(backend_name: str) -> tuple[str, str, str]:
+    """
+    Classify a backend into source type, family, and processor revision.
+    
+    Returns:
+        (source, family, processor) tuple
+        - source: "simulation" or "real"
+        - family: "eagle", "heron", "falcon", "simulator", or "unknown"
+        - processor: "r3", "r1", etc. or empty string
+    """
+    if backend_name in IBM_BACKEND_FAMILIES:
+        family, processor = IBM_BACKEND_FAMILIES[backend_name]
+        source = "simulation" if family == "simulator" else "real"
+        return source, family, processor
+    
+    # Fallback classification based on naming patterns
+    if "simulator" in backend_name.lower() or "sampler" in backend_name.lower():
+        return "simulation", "simulator", ""
+    elif backend_name.startswith("ibm_"):
+        return "real", "unknown", ""
+    else:
+        return "simulation", "unknown", ""
 
 
 @dataclass
@@ -76,10 +127,15 @@ class HeartbeatResult:
     job_id: str
     execution_time_seconds: float
     
+    # Source classification (simulation vs real quantum)
+    source: str = "simulation"  # "simulation" | "real"
+    backend_family: str = "simulator"  # "eagle" | "heron" | "simulator" | etc.
+    backend_processor: str = ""  # e.g., "r3" for Eagle r3, empty for simulator
+    
     # Circuit info
-    num_qubits: int
-    circuit_depth: int
-    shots: int
+    num_qubits: int = 5
+    circuit_depth: int = 0
+    shots: int = 1024
     
     # Raw results
     counts: Dict[str, int] = field(default_factory=dict)
@@ -127,11 +183,49 @@ class QuantumHeartbeat:
         self._runtime = None
         self._backend = None
         
-        logger.info(f"Quantum Heartbeat initialized")
+        # Backend rotation tracking
+        self._rotation_index = self._load_rotation_index()
+        
+        logger.info("Quantum Heartbeat initialized")
         logger.info(f"  Interval: {self.config.interval_seconds}s")
         logger.info(f"  Qubits: {self.config.num_qubits}")
         logger.info(f"  Shots: {self.config.shots}")
         logger.info(f"  Simulator mode: {self.config.use_simulator}")
+        if self.config.backend_rotation:
+            logger.info(f"  Backend rotation: {self.config.backend_rotation}")
+    
+    def _load_rotation_index(self) -> int:
+        """Load the current backend rotation index from disk."""
+        try:
+            index_path = Path(self.config.rotation_index_file)
+            if index_path.exists():
+                return int(index_path.read_text().strip())
+        except (ValueError, IOError):
+            pass
+        return 0
+    
+    def _save_rotation_index(self, index: int):
+        """Save the current backend rotation index to disk."""
+        try:
+            index_path = Path(self.config.rotation_index_file)
+            index_path.parent.mkdir(parents=True, exist_ok=True)
+            index_path.write_text(str(index))
+        except IOError as e:
+            logger.warning(f"Could not save rotation index: {e}")
+    
+    def _get_next_backend_name(self) -> Optional[str]:
+        """Get the next backend in the rotation sequence."""
+        if not self.config.backend_rotation:
+            return None
+        
+        backends = self.config.backend_rotation
+        backend_name = backends[self._rotation_index % len(backends)]
+        
+        # Advance rotation for next beat
+        self._rotation_index += 1
+        self._save_rotation_index(self._rotation_index)
+        
+        return backend_name
     
     def _get_runtime(self):
         """Lazy initialization of quantum runtime."""
@@ -147,10 +241,18 @@ class QuantumHeartbeat:
                 from aios_quantum.runtime import QuantumRuntime
                 runtime = QuantumRuntime()
                 self._runtime = runtime
-                self._backend = runtime.get_least_busy_backend(
-                    min_qubits=self.config.num_qubits
-                )
+                
+                # Check for backend rotation
+                next_backend = self._get_next_backend_name()
+                if next_backend:
+                    logger.info(f"Backend rotation: selecting {next_backend}")
+                    self._backend = runtime.service.backend(next_backend)
+                else:
+                    self._backend = runtime.get_least_busy_backend(
+                        min_qubits=self.config.num_qubits
+                    )
                 logger.info(f"Using backend: {self._backend.name}")
+        return self._runtime, self._backend
         return self._runtime, self._backend
     
     def _create_heartbeat_circuit(self):
@@ -304,6 +406,9 @@ class QuantumHeartbeat:
             # Calculate metrics
             metrics = self._calculate_metrics(counts)
             
+            # Classify backend for source/family/processor
+            source, family, processor = classify_backend(backend_name)
+            
             # Create result object
             now_utc = datetime.now(timezone.utc)
             result = HeartbeatResult(
@@ -313,6 +418,9 @@ class QuantumHeartbeat:
                 backend_name=backend_name,
                 job_id=job_id,
                 execution_time_seconds=execution_time,
+                source=source,
+                backend_family=family,
+                backend_processor=processor,
                 num_qubits=self.config.num_qubits,
                 circuit_depth=circuit.depth(),
                 shots=self.config.shots,

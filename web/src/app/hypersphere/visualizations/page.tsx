@@ -18,7 +18,9 @@ import {
   VISUALIZATION_MODES, 
   HypersphereSurfaceData, 
   UnifiedSurface,
-  DEFAULT_CONTROLS
+  DEFAULT_CONTROLS,
+  SourceFilter,
+  BackendFamily
 } from './types'
 
 // Visualization components
@@ -313,10 +315,14 @@ function TopologyMeshScene({
 
 function HypergateSphereScene({ 
   surfaceData,
-  selectedClass 
+  selectedClass,
+  sourceFilter,
+  backendFilter
 }: { 
   surfaceData: UnifiedSurface | null
   selectedClass: string | null
+  sourceFilter: SourceFilter
+  backendFilter: BackendFamily
 }) {
   if (!surfaceData) return null
   
@@ -325,7 +331,12 @@ function HypergateSphereScene({
       <HypergateBosonicCube />
       <ReferenceSphere />
       <TopologyRegions />
-      <ExperimentVertices surfaceData={surfaceData} selectedClass={selectedClass} />
+      <ExperimentVertices 
+        surfaceData={surfaceData} 
+        selectedClass={selectedClass}
+        sourceFilter={sourceFilter}
+        backendFilter={backendFilter}
+      />
       <ExperimentConnections surfaceData={surfaceData} />
     </>
   )
@@ -348,6 +359,10 @@ export default function QuantumVisualization() {
   // Control state
   const [wireframe, setWireframe] = useState(false)
   const [selectedClass, setSelectedClass] = useState<string | null>(null)
+  
+  // Source/Backend filter state
+  const [sourceFilter, setSourceFilter] = useState<SourceFilter>('all')
+  const [backendFilter, setBackendFilter] = useState<BackendFamily>('all')
   
   // Capture state
   const [captureApi, setCaptureApi] = useState<{
@@ -460,7 +475,12 @@ export default function QuantumVisualization() {
             <TopologyMeshScene surfaceData={topologyData} wireframe={wireframe} />
           )}
           {mode === 'unified' && (
-            <HypergateSphereScene surfaceData={unifiedData} selectedClass={selectedClass} />
+            <HypergateSphereScene 
+              surfaceData={unifiedData} 
+              selectedClass={selectedClass}
+              sourceFilter={sourceFilter}
+              backendFilter={backendFilter}
+            />
           )}
         </Suspense>
         
@@ -561,6 +581,10 @@ export default function QuantumVisualization() {
             surfaceData={unifiedData}
             selectedClass={selectedClass}
             onSelectClass={setSelectedClass}
+            sourceFilter={sourceFilter}
+            onSourceFilterChange={setSourceFilter}
+            backendFilter={backendFilter}
+            onBackendFilterChange={setBackendFilter}
           />
         )}
       </div>
@@ -576,7 +600,7 @@ export default function QuantumVisualization() {
         fontFamily: 'monospace'
       }}>
         Drag to rotate • Scroll to zoom
-        {mode === 'unified' && ' • Click class to filter'}
+        {mode === 'unified' && ' • Filter: Source/Backend/Class'}
       </div>
       
       {/* Capture Controls */}
