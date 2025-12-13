@@ -7,11 +7,11 @@ permissions:
   contents: write
 
 on:
-  # Run every hour
-  schedule:
-    - cron: '0 * * * *'
+  # Scheduled runs use SIMULATOR (disabled by default - enable when needed)
+  # schedule:
+  #   - cron: '0 * * * *'
   
-  # Allow manual trigger with options
+  # Manual trigger - defaults to REAL QUANTUM
   workflow_dispatch:
     inputs:
       use_simulator:
@@ -20,18 +20,25 @@ on:
         default: 'false'
         type: choice
         options:
-          - 'true'
           - 'false'
+          - 'true'
       backend_override:
-        description: 'Override backend (leave empty for rotation)'
+        description: 'Backend: ibm_torino (fastest), ibm_fez, ibm_marrakesh (slowest)'
         required: false
-        default: ''
-        type: string
+        default: 'ibm_torino'
+        type: choice
+        options:
+          - 'ibm_torino'
+          - 'ibm_fez'
+          - 'ibm_marrakesh'
+          - ''
 
 env:
-  # Backend rotation: empty means auto-discover available backends
-  # Comma-separated list to override: "ibm_brisbane,ibm_kyoto,ibm_osaka"
-  BACKEND_ROTATION: ""
+  # Available backends for your account (Heron processors):
+  # - ibm_torino: 133q, usually fastest queue
+  # - ibm_fez: 156q, moderate queue  
+  # - ibm_marrakesh: 156q, often very busy (10k+ queue)
+  BACKEND_ROTATION: "ibm_torino,ibm_fez"
 
 jobs:
   heartbeat:
@@ -114,6 +121,13 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add heartbeat_results/
-          git diff --staged --quiet || git commit -m "💓 Heartbeat $(date -u +'%Y-%m-%d %H:%M') UTC"
-          # Authenticated push using the workflow token
+          # Check if there are changes to commit
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+          git commit -m "💓 Heartbeat $(date -u +'%Y-%m-%d %H:%M') UTC"
+          # Pull with rebase to handle concurrent commits (long quantum jobs)
+          git pull --rebase origin ${{ github.ref_name }} || true
+          # Push with retry
           git push "https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}.git" HEAD:${{ github.ref_name }}
