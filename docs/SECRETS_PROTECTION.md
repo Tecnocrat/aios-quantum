@@ -19,6 +19,22 @@ On December 13, 2025, IBM Cloud detected a leaked Service ID API key after the r
 | **Detection Time** | December 13, 2025, 11:12 AM |
 | **Exposure Source** | `docs/IBM_CLOUD_CONFIG.md` committed to public repo |
 
+### Key Types Clarification
+
+IBM Cloud has two types of API keys:
+
+| Type | Purpose | Leaked? |
+|------|---------|---------|
+| **User API Keys** | Tied to your IBM Cloud user account | ❌ Not leaked |
+| **Service ID API Keys** | Programmatic access to specific services | ✅ **LEAKED** |
+
+**Your User API Keys (SAFE):**
+- `AIOS` (ApiKey-278f22ac-...) - IBM Quantum access
+- `aios-quantum-key` (ApiKey-5b5fdbe7-...) - Has "Disable on leak" enabled ✅
+
+**Leaked Service ID Key (ROTATE IMMEDIATELY):**
+- `cos-aios-key` (ApiKey-091b08c9-...) - COS Service credential
+
 ### Exposed Credentials (ROTATE IMMEDIATELY)
 1. **COS API Key** - Cloud Object Storage access
 2. **Cloudant API Key** - NoSQL database access
