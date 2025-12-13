@@ -30,6 +30,9 @@ dependencies = [
     # === IBM Cloud Integration ===
     "ibm-cloud-sdk-core>=3.20.0",       # IBM Cloud SDK core
     "ibm-platform-services>=0.50.0",    # IBM Cloud platform services
+    "ibm-cos-sdk>=2.13.0",              # Cloud Object Storage SDK
+    "cloudant>=2.15.0",                 # Cloudant NoSQL database
+    "ibm-watson>=8.0.0",                # Watson AI services
     
     # === Configuration & Environment ===
     "python-dotenv>=1.0.0",             # Load .env files
