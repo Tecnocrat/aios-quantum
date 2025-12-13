@@ -29,8 +29,9 @@ on:
         type: string
 
 env:
-  # Backend rotation sequence (Eagle + Heron processors)
-  BACKEND_ROTATION: "ibm_brisbane,ibm_kyoto,ibm_osaka,ibm_fez,ibm_torino"
+  # Backend rotation: empty means auto-discover available backends
+  # Comma-separated list to override: "ibm_brisbane,ibm_kyoto,ibm_osaka"
+  BACKEND_ROTATION: ""
 
 jobs:
   heartbeat:
@@ -71,7 +72,7 @@ jobs:
           use_sim = os.environ.get('USE_SIMULATOR', 'false').lower() == 'true'
           backend_override = os.environ.get('BACKEND_OVERRIDE', '').strip()
           
-          # Parse backend rotation from env
+          # Parse backend rotation from env (empty = auto-discover)
           rotation_str = os.environ.get('BACKEND_ROTATION', '')
           backend_rotation = [b.strip() for b in rotation_str.split(',') if b.strip()]
           
@@ -81,12 +82,15 @@ jobs:
               print(f'Using override backend: {backend_override}')
           elif backend_rotation:
               print(f'Backend rotation: {backend_rotation}')
+          else:
+              print('Auto-discovery mode: will find available backends')
           
           config = HeartbeatConfig(
               use_simulator=use_sim,
               num_qubits=5,
               shots=1024,
-              backend_rotation=backend_rotation if not use_sim else None,
+              # None or empty list triggers auto-discovery
+              backend_rotation=backend_rotation if (backend_rotation and not use_sim) else None,
           )
           
           heartbeat = QuantumHeartbeat(config)

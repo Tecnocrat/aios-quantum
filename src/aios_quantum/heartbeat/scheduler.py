@@ -227,6 +227,40 @@ class QuantumHeartbeat:
         
         return backend_name
     
+    def _discover_available_backends(self, runtime) -> list[str]:
+        """
+        Discover backends available to the current IBM Quantum account.
+        
+        Returns:
+            List of backend names sorted by qubit count (descending)
+        """
+        try:
+            # Get all operational, non-simulator backends
+            backends = runtime.service.backends(
+                operational=True,
+                simulator=False,
+                min_num_qubits=self.config.num_qubits
+            )
+            
+            # Sort by qubit count descending (prefer larger systems)
+            backend_info = []
+            for b in backends:
+                try:
+                    num_qubits = b.num_qubits if hasattr(b, 'num_qubits') else b.configuration().n_qubits
+                    backend_info.append((b.name, num_qubits))
+                except Exception:
+                    backend_info.append((b.name, 0))
+            
+            backend_info.sort(key=lambda x: x[1], reverse=True)
+            available = [name for name, _ in backend_info]
+            
+            logger.info(f"Discovered {len(available)} available backends: {available}")
+            return available
+            
+        except Exception as e:
+            logger.warning(f"Backend discovery failed: {e}")
+            return []
+    
     def _get_runtime(self):
         """Lazy initialization of quantum runtime."""
         if self._runtime is None:
@@ -244,15 +278,39 @@ class QuantumHeartbeat:
                 
                 # Check for backend rotation
                 next_backend = self._get_next_backend_name()
+                
                 if next_backend:
-                    logger.info(f"Backend rotation: selecting {next_backend}")
-                    self._backend = runtime.service.backend(next_backend)
+                    # Try the configured backend, fall back to discovery if unavailable
+                    try:
+                        logger.info(f"Backend rotation: trying {next_backend}")
+                        self._backend = runtime.service.backend(next_backend)
+                    except Exception as e:
+                        logger.warning(f"Backend {next_backend} not available: {e}")
+                        logger.info("Falling back to auto-discovery...")
+                        
+                        # Discover what backends ARE available
+                        available = self._discover_available_backends(runtime)
+                        
+                        if available:
+                            # Use first available from discovered list
+                            self._backend = runtime.service.backend(available[0])
+                            logger.info(f"Using discovered backend: {self._backend.name}")
+                        else:
+                            # Last resort: least busy
+                            self._backend = runtime.get_least_busy_backend(
+                                min_qubits=self.config.num_qubits
+                            )
                 else:
-                    self._backend = runtime.get_least_busy_backend(
-                        min_qubits=self.config.num_qubits
-                    )
+                    # No rotation configured - discover and use least busy
+                    available = self._discover_available_backends(runtime)
+                    if available:
+                        self._backend = runtime.service.backend(available[0])
+                    else:
+                        self._backend = runtime.get_least_busy_backend(
+                            min_qubits=self.config.num_qubits
+                        )
+                        
                 logger.info(f"Using backend: {self._backend.name}")
-        return self._runtime, self._backend
         return self._runtime, self._backend
     
     def _create_heartbeat_circuit(self):
