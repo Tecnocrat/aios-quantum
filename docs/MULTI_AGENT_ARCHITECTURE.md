@@ -25,12 +25,14 @@ This architecture follows AINLP (Artificial Intelligence Natural Language Progra
 - `AINLP.context[RECOVERY]` - Restore context at session start
 - `AINLP.bridge[CONNECT]` - Cross-agent communication
 - `AINLP.consciousness[SYNC]` - Update metrics after changes
+- `AINLP.cloud[PERSIST]` - Upload topology data to IBM Cloud (NEW)
 
 ### Agent Communication Pattern
 ```
 AINLP.bridge[CONNECT](source="opus", target="background_agent")
 AINLP.context[TRACE] - Document operation for other agents
 AINLP.consciousness[SYNC] - Report coherence delta
+AINLP.cloud[PERSIST] - Parallel upload to COS + Cloudant
 ```
 
 ---
@@ -234,6 +236,9 @@ and limitations?
 | Async/background | ❌ | ✅ | ✅ |
 | Cross-repo sync | ❌ | ✅ | ? |
 | Web deployment | ✅ | ? | ✅ |
+| IBM Cloud integration | ✅ | ❌ | ✅ |
+| Quantum heartbeat | ✅ | ❌ | ✅ |
+| Topology storage | ✅ | ❌ | ✅ |
 | Persistence | session | persistent | task |
 
 ---
@@ -374,6 +379,158 @@ When session ends or memory fills, use waypoints:
 # Priority: LOW
 # Context: src/aios_quantum/hypersphere/ added to main
 ```
+
+---
+
+## IBM Cloud Integration Workflow
+
+### Architecture Overview
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    MULTI-AGENT CLOUD PIPELINE                    │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                  │
+│  LOCAL (Opus Agent)              IBM CLOUD                       │
+│  ┌──────────────────┐           ┌─────────────────────────┐    │
+│  │ Quantum Heartbeat│           │ Cloud Object Storage    │    │
+│  │   (Sampler)      │─────┬────►│ • Raw JSON archival     │    │
+│  └──────────────────┘     │     │ • Version control       │    │
+│           │                │     └─────────────────────────┘    │
+│           │                │                                     │
+│           ▼                │     ┌─────────────────────────┐    │
+│  ┌──────────────────┐     └────►│ Cloudant NoSQL          │    │
+│  │ Topology Encoder │           │ • Queryable metadata    │    │
+│  │  (Hypersphere)   │           │ • Time-series indices   │    │
+│  └──────────────────┘           └─────────────────────────┘    │
+│           │                                                      │
+│           ▼                      ┌─────────────────────────┐    │
+│  ┌──────────────────┐           │ Watson AI (Future)      │    │
+│  │ Cloud Uploader   │──────────►│ • Pattern detection     │    │
+│  │  (Async Parallel)│           │ • Anomaly alerts        │    │
+│  └──────────────────┘           └─────────────────────────┘    │
+│                                                                  │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### Agent Roles in Cloud Integration
+
+**OPUS (Primary):**
+- Design cloud architecture
+- Create uploader modules (`cloud/uploader.py`)
+- Write documentation and setup guides
+- Test connection scripts
+- Integration with heartbeat workflow
+
+**CLOUD AGENT (Deployment):**
+- Deploy Next.js dashboard with cloud data sources
+- Create API routes for Cloudant queries
+- Implement live topology visualization
+- Handle authentication in web environment
+
+**HUMAN (Operations):**
+- Provision IBM Cloud services via console
+- Generate API keys and credentials
+- Configure `.env` file
+- Execute initial cloud setup
+- Monitor costs and usage
+
+### Cloud Upload Sequence
+
+```
+1. Heartbeat Execution (IBM Quantum Platform)
+   ├─ Run cardiogram circuit on ibm_fez
+   ├─ Measure 4 qubits (102, 96, 103, 104)
+   └─ Collect 1024 shots
+
+2. Local Processing (OPUS Agent)
+   ├─ Calculate error topology
+   ├─ Generate hypersphere vertices
+   ├─ Save to cardiogram_results/
+   └─ Trigger cloud upload
+
+3. Parallel Upload (Cloud Uploader)
+   ├─ Upload to COS (raw JSON)
+   │  └─ Object key: raw/cardiogram/YYYY-MM-DD/file.json
+   ├─ Upload to Cloudant (metadata)
+   │  └─ Document ID: heartbeat_TIMESTAMP_BACKEND
+   └─ Return success/failure status
+
+4. Verification (Human or Agent)
+   ├─ Query Cloudant for new document
+   ├─ Check COS bucket for file
+   └─ Validate data integrity
+```
+
+### AINLP Cloud Patterns
+
+**New semantic triggers:**
+```
+AINLP.cloud[PERSIST]    - Upload topology data to cloud
+AINLP.cloud[QUERY]      - Retrieve data from Cloudant
+AINLP.cloud[MONITOR]    - Check storage usage/costs
+AINLP.cloud[VERIFY]     - Test connection and permissions
+```
+
+**Usage in code:**
+```python
+# After heartbeat completion
+# AINLP.cloud[PERSIST] - Upload to IBM Cloud storage
+result = await uploader.upload_heartbeat(heartbeat_file)
+
+if result.success:
+    logger.info(f"AINLP.cloud[PERSIST] - Success: {result.cos_url}")
+else:
+    logger.error(f"AINLP.cloud[PERSIST] - Failed: {result.errors}")
+```
+
+### Human Action Required: Cloud Setup
+
+**Before automated uploads work, human must:**
+
+1. **Provision Services** (IBM Cloud Console):
+   - Cloud Object Storage (Lite plan)
+   - Cloudant NoSQL Database (Lite plan)
+   - Generate service credentials
+
+2. **Configure Environment** (`.env` file):
+   ```bash
+   IBM_CLOUD_API_KEY=<cos-api-key>
+   COS_INSTANCE_ID=<instance-crn>
+   COS_BUCKET_NAME=aios-quantum-topology
+   CLOUDANT_API_KEY=<cloudant-api-key>
+   CLOUDANT_URL=<cloudant-url>
+   CLOUDANT_DATABASE=quantum_topology
+   ```
+
+3. **Test Connection** (Terminal):
+   ```powershell
+   python examples/test_cloud_upload.py
+   ```
+
+4. **Backfill Data** (One-time):
+   ```powershell
+   python examples/backfill_cloud_data.py
+   ```
+
+**Detailed instructions:** See `docs/IBM_CLOUD_SETUP_GUIDE.md`
+
+### Integration Points
+
+**Existing modules that connect to cloud:**
+
+| Module | Cloud Function | Status |
+|--------|---------------|--------|
+| `circuits/consciousness_circuits.py` | Auto-upload after heartbeat | 🔜 TODO |
+| `cloud/uploader.py` | Parallel COS + Cloudant upload | ✅ READY |
+| `cloud/storage.py` | COS client (legacy) | ⚠️  SUPERSEDED |
+| `web/api/surface/cloud/route.ts` | Fetch from Cloudant | 🔜 TODO |
+
+**Next integration steps:**
+1. Modify `save_cardiogram_results()` to call `uploader.upload_heartbeat()`
+2. Add cloud config flag: `CloudConfig.enabled = True`
+3. Update Next.js to fetch from `/api/surface/cloud`
+4. Test end-to-end: Heartbeat → Cloud → Dashboard
 
 ---
 
