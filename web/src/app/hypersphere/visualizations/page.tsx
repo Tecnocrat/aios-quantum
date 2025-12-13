@@ -7,9 +7,9 @@
 // Switch between: Topology Mesh, Hypergate Sphere, and future modes
 // =============================================================================
 
-import { Canvas } from '@react-three/fiber'
+import { Canvas, useThree } from '@react-three/fiber'
 import { OrbitControls } from '@react-three/drei'
-import { Suspense, useState, useEffect } from 'react'
+import { Suspense, useState, useEffect, useCallback, useRef } from 'react'
 import Link from 'next/link'
 
 // Type imports
@@ -37,6 +37,101 @@ import {
   ExperimentConnections,
   HypergateStatsPanel
 } from './HypergateSphere'
+
+// =============================================================================
+// CAPTURE COMPONENT (inside Canvas)
+// =============================================================================
+
+function CaptureController({ 
+  onCaptureReady 
+}: { 
+  onCaptureReady: (capture: { screenshot: () => void, startRecording: () => void, stopRecording: () => Promise<void> }) => void 
+}) {
+  const { gl, scene, camera } = useThree()
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null)
+  const chunksRef = useRef<Blob[]>([])
+  
+  const screenshot = useCallback(() => {
+    gl.render(scene, camera)
+    const dataUrl = gl.domElement.toDataURL('image/png', 1.0)
+    const now = new Date()
+    const timestamp = now.toISOString().replace(/[:.]/g, '-').slice(0, 19)
+    const filename = `aios-quantum_${timestamp}.png`
+    
+    const link = document.createElement('a')
+    link.href = dataUrl
+    link.download = filename
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    
+    console.log('📸 Screenshot saved:', filename)
+  }, [gl, scene, camera])
+  
+  const startRecording = useCallback(() => {
+    const canvas = gl.domElement
+    const stream = canvas.captureStream(30)
+    
+    const mimeType = MediaRecorder.isTypeSupported('video/webm;codecs=vp9')
+      ? 'video/webm;codecs=vp9'
+      : 'video/webm'
+    
+    const mediaRecorder = new MediaRecorder(stream, {
+      mimeType,
+      videoBitsPerSecond: 5000000
+    })
+    
+    chunksRef.current = []
+    
+    mediaRecorder.ondataavailable = (event) => {
+      if (event.data.size > 0) {
+        chunksRef.current.push(event.data)
+      }
+    }
+    
+    mediaRecorder.start(100)
+    mediaRecorderRef.current = mediaRecorder
+    console.log('🎬 Recording started')
+  }, [gl])
+  
+  const stopRecording = useCallback(async () => {
+    return new Promise<void>((resolve) => {
+      const mediaRecorder = mediaRecorderRef.current
+      if (!mediaRecorder) {
+        resolve()
+        return
+      }
+      
+      mediaRecorder.onstop = () => {
+        const blob = new Blob(chunksRef.current, { type: 'video/webm' })
+        const now = new Date()
+        const timestamp = now.toISOString().replace(/[:.]/g, '-').slice(0, 19)
+        const filename = `aios-quantum_recording_${timestamp}.webm`
+        
+        const url = URL.createObjectURL(blob)
+        const link = document.createElement('a')
+        link.href = url
+        link.download = filename
+        document.body.appendChild(link)
+        link.click()
+        document.body.removeChild(link)
+        URL.revokeObjectURL(url)
+        
+        console.log('🎬 Recording saved:', filename, `(${(blob.size / 1024 / 1024).toFixed(2)} MB)`)
+        mediaRecorderRef.current = null
+        resolve()
+      }
+      
+      mediaRecorder.stop()
+    })
+  }, [])
+  
+  useEffect(() => {
+    onCaptureReady({ screenshot, startRecording, stopRecording })
+  }, [screenshot, startRecording, stopRecording, onCaptureReady])
+  
+  return null
+}
 
 // =============================================================================
 // LOADING COMPONENTS
@@ -254,6 +349,16 @@ export default function QuantumVisualization() {
   const [wireframe, setWireframe] = useState(false)
   const [selectedClass, setSelectedClass] = useState<string | null>(null)
   
+  // Capture state
+  const [captureApi, setCaptureApi] = useState<{
+    screenshot: () => void
+    startRecording: () => void
+    stopRecording: () => Promise<void>
+  } | null>(null)
+  const [isRecording, setIsRecording] = useState(false)
+  const [recordingDuration, setRecordingDuration] = useState(0)
+  const recordingTimerRef = useRef<NodeJS.Timeout | null>(null)
+  
   // Get current mode config
   const currentConfig = VISUALIZATION_MODES.find(m => m.id === mode)!
   
@@ -294,6 +399,43 @@ export default function QuantumVisualization() {
     }
   }, [mode])
   
+  // Recording handlers
+  const handleScreenshot = useCallback(() => {
+    if (captureApi) {
+      captureApi.screenshot()
+    }
+  }, [captureApi])
+  
+  const handleRecordToggle = useCallback(async () => {
+    if (!captureApi) return
+    
+    if (isRecording) {
+      // Stop recording
+      if (recordingTimerRef.current) {
+        clearInterval(recordingTimerRef.current)
+        recordingTimerRef.current = null
+      }
+      setIsRecording(false)
+      await captureApi.stopRecording()
+      setRecordingDuration(0)
+    } else {
+      // Start recording
+      captureApi.startRecording()
+      setIsRecording(true)
+      setRecordingDuration(0)
+      recordingTimerRef.current = setInterval(() => {
+        setRecordingDuration(d => d + 1)
+      }, 1000)
+    }
+  }, [captureApi, isRecording])
+  
+  // Format recording duration
+  const formatDuration = (seconds: number) => {
+    const mins = Math.floor(seconds / 60)
+    const secs = seconds % 60
+    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`
+  }
+  
   // Camera position based on mode
   const cameraPosition: [number, number, number] = mode === 'topology' 
     ? [0, 0, 2.8] 
@@ -321,6 +463,8 @@ export default function QuantumVisualization() {
             <HypergateSphereScene surfaceData={unifiedData} selectedClass={selectedClass} />
           )}
         </Suspense>
+        
+        <CaptureController onCaptureReady={setCaptureApi} />
         
         <OrbitControls 
           enablePan={false} 
@@ -433,6 +577,60 @@ export default function QuantumVisualization() {
       }}>
         Drag to rotate • Scroll to zoom
         {mode === 'unified' && ' • Click class to filter'}
+      </div>
+      
+      {/* Capture Controls */}
+      <div style={{
+        position: 'absolute',
+        bottom: 60,
+        right: 20,
+        display: 'flex',
+        gap: 8,
+        fontFamily: 'monospace',
+        fontSize: 10,
+      }}>
+        <button
+          onClick={handleScreenshot}
+          disabled={!captureApi}
+          style={{
+            padding: '8px 12px',
+            background: 'rgba(0,255,136,0.15)',
+            color: '#00ff88',
+            border: '1px solid #00ff88',
+            borderRadius: 4,
+            cursor: captureApi ? 'pointer' : 'not-allowed',
+            fontFamily: 'monospace',
+            fontSize: 10,
+            opacity: captureApi ? 1 : 0.5,
+          }}
+          title="Save PNG screenshot"
+        >
+          📸 Snapshot
+        </button>
+        
+        <button
+          onClick={handleRecordToggle}
+          disabled={!captureApi}
+          style={{
+            padding: '8px 12px',
+            background: isRecording ? 'rgba(255,0,0,0.2)' : 'rgba(255,136,0,0.15)',
+            color: isRecording ? '#ff4444' : '#ff8800',
+            border: `1px solid ${isRecording ? '#ff4444' : '#ff8800'}`,
+            borderRadius: 4,
+            cursor: captureApi ? 'pointer' : 'not-allowed',
+            fontFamily: 'monospace',
+            fontSize: 10,
+            minWidth: 90,
+            opacity: captureApi ? 1 : 0.5,
+          }}
+          title={isRecording ? 'Stop & save WebM video' : 'Start recording'}
+        >
+          {isRecording ? (
+            <>⏹ {formatDuration(recordingDuration)}</>
+          ) : (
+            <>🎬 Record</>
+          )}
+        </button>
       </div>
       
       {/* Back link */}
