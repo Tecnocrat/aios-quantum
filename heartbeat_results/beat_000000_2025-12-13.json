@@ -1,53 +1,53 @@
 {
   "beat_number": 0,
-  "timestamp_utc": "2025-12-13T04:08:23.979527+00:00",
-  "timestamp_local": "2025-12-13T04:08:23.979538",
+  "timestamp_utc": "2025-12-13T05:04:37.054895+00:00",
+  "timestamp_local": "2025-12-13T05:04:37.054905",
   "backend_name": "statevector_sampler",
   "job_id": "simulator",
-  "execution_time_seconds": 0.005819082260131836,
+  "execution_time_seconds": 0.00584864616394043,
   "num_qubits": 5,
   "circuit_depth": 8,
   "shots": 1024,
   "counts": {
-    "10000": 58,
-    "00000": 894,
-    "01000": 37,
-    "00100": 20,
-    "00010": 6,
-    "11000": 4,
-    "01100": 1,
-    "10010": 2,
-    "10100": 2
+    "00000": 889,
+    "10000": 57,
+    "01000": 36,
+    "00100": 23,
+    "00010": 12,
+    "11000": 1,
+    "00110": 2,
+    "00001": 3,
+    "10010": 1
   },
-  "coherence_estimate": 0.873046875,
-  "entropy": 0.1618448941239003,
+  "coherence_estimate": 0.8681640625,
+  "entropy": 0.16775632702947116,
   "top_states": [
     {
       "state": "00000",
-      "count": 894,
-      "probability": 0.873046875
+      "count": 889,
+      "probability": 0.8681640625
     },
     {
       "state": "10000",
-      "count": 58,
-      "probability": 0.056640625
+      "count": 57,
+      "probability": 0.0556640625
     },
     {
       "state": "01000",
-      "count": 37,
-      "probability": 0.0361328125
+      "count": 36,
+      "probability": 0.03515625
     },
     {
       "state": "00100",
-      "count": 20,
-      "probability": 0.01953125
+      "count": 23,
+      "probability": 0.0224609375
     },
     {
       "state": "00010",
-      "count": 6,
-      "probability": 0.005859375
+      "count": 12,
+      "probability": 0.01171875
     }
   ],
-  "budget_used_total": 0.005819082260131836,
-  "budget_remaining": 599.9941809177399
+  "budget_used_total": 0.00584864616394043,
+  "budget_remaining": 599.9941513538361
 }
