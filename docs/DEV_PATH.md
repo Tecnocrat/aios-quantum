@@ -11,6 +11,11 @@ aios-quantum/
 ├── src/aios_quantum/
 │   ├── heartbeat/        # Quantum heartbeat scheduler
 │   │   └── scheduler.py  # HeartbeatConfig, HeartbeatResult, QuantumHeartbeat
+│   ├── quantum_jobs/     # Non-blocking job management ← NEW
+│   │   ├── manager.py    # QuantumJobManager (parallel submission)
+│   │   ├── tracker.py    # JobTracker (persistent job tracking)
+│   │   ├── patterns.py   # Complex quantum patterns
+│   │   └── cli.py        # Command-line interface
 │   ├── engine/           # 3D visualization engine
 │   │   ├── geometry.py   # Cube, Sphere, Point3D, Color
 │   │   ├── encoder.py    # SurfaceEncoder (4 strategies)
@@ -25,6 +30,9 @@ aios-quantum/
 │   └── supercell/        # AIOS integration
 │       ├── interface.py  # Abstract interface
 │       └── quantum_supercell.py  # Concrete implementation
+├── quantum_jobs/         # Job tracking & results storage
+│   ├── pending_jobs.json # Tracked job IDs
+│   └── results/          # Collected quantum results
 ├── web/                  # Next.js + React Three Fiber frontend
 │   └── src/components/
 │       └── QuantumScene.tsx
@@ -98,6 +106,9 @@ Documented in [INTERFACE.md](../INTERFACE.md) — **Priority: MAXIMUM**
 | 2025-12-13 | IBM Cloud services fully configured (COS + Cloudant) |
 | 2025-12-13 | Cloud uploader module working (ibmcloudant SDK) |
 | 2025-12-13 | **60+ heartbeat runs** from GitHub workflow |
+| 2025-12-13 | **Quantum Job Manager** - parallel multi-core execution |
+| 2025-12-13 | **Complex patterns** - consciousness probe, entanglement witness |
+| 2025-12-13 | **CLI tool** - non-blocking job submission & tracking |
 | 2025-12-13 | **Unified experiment taxonomy** created |
 | 2025-12-13 | **Exotic experiments** (π, φ, arithmetic, entanglement) |
 | 2025-12-13 | **Unified hypersphere visualization** at /hypersphere/unified |
@@ -219,7 +230,7 @@ web/src/app/hypersphere/visualizations/
 | Component | Status |
 |-----------|--------|
 | Heartbeat Scheduler | ✅ COMPLETE (60+ runs) |
-| GitHub Actions | ✅ COMPLETE (hourly) |
+| GitHub Actions | ✅ COMPLETE (manual trigger) |
 | 3D Engine | ✅ COMPLETE |
 | Hypersphere Visualization | ✅ COMPLETE |
 | IBM Cloud Services | ✅ COMPLETE |
@@ -228,6 +239,9 @@ web/src/app/hypersphere/visualizations/
 | Exotic Experiments | ✅ COMPLETE |
 | Unified Visualization | ✅ COMPLETE |
 | Multi-Modal Viz System | ✅ COMPLETE |
+| **Quantum Job Manager** | ✅ COMPLETE |
+| **Parallel Multi-Backend** | ✅ COMPLETE |
+| **CLI Tool** | ✅ COMPLETE |
 | Data Backfill | 🔄 IN PROGRESS |
 | Auto-Upload | 🚧 TO DEVELOP |
 | Cloudant Query | 🚧 TO DEVELOP |
@@ -243,6 +257,8 @@ web/src/app/hypersphere/visualizations/
 - [x] Create unified experiment taxonomy ✅ COMPLETE
 - [x] Add exotic experiments (π, φ, arithmetic) ✅ COMPLETE  
 - [x] Build unified hypersphere visualization ✅ COMPLETE
+- [x] Non-blocking quantum job management ✅ COMPLETE
+- [x] Parallel multi-backend submission ✅ COMPLETE
 - [ ] **IMMEDIATE:** Run backfill script to upload local data to cloud
 - [ ] Create Cloudant query utility script
 - [ ] Integrate auto-upload into heartbeat workflow
@@ -251,150 +267,82 @@ web/src/app/hypersphere/visualizations/
 
 ---
 
+## Phase 5: Quantum Job Management System (December 2025) ✅ COMPLETE
+
+### Problem: Terminal Blocking
+VSCode terminal blocks when waiting for quantum jobs (~30-2000+ seconds).
+
+### Solution: Fire-and-Track Architecture
+Non-blocking job submission with persistent tracking.
+
+### Job Execution Methods Discovered
+
+| Method | Blocking? | Use Case |
+|--------|-----------|----------|
+| `sampler.run().result()` | Yes | Simple, waits for result |
+| `sampler.run()` → `job.job_id()` | **No** | Submit & track immediately |
+| `service.job(id).result()` | Yes | Retrieve result later |
+| `service.job(id).status()` | **No** | Poll without blocking |
+
+### Module Structure ✅ COMPLETE
+
+```
+src/aios_quantum/quantum_jobs/
+├── __init__.py       # Module exports
+├── tracker.py        # JobTracker - JSON persistence
+├── manager.py        # QuantumJobManager - parallel submission
+├── patterns.py       # Complex quantum patterns (5 types)
+└── cli.py            # Command-line interface
+```
+
+### Complex Quantum Patterns ✅ COMPLETE
+
+| Pattern | Qubits | Description |
+|---------|--------|-------------|
+| `consciousness_probe` | 8-127 | Multi-layer entanglement + phase encoding |
+| `entanglement_witness` | 3-8 | GHZ state with witness operators |
+| `quantum_walk` | 8-64 | Position + coin registers for random walk |
+| `variational_layer` | 4-127 | VQE hardware-efficient ansatz |
+| `hypersphere_sampler` | 6-127 | Hypersphere coordinate sampling |
+
+### CLI Interface ✅ COMPLETE
+
+```powershell
+# Check available backends
+python -m aios_quantum.quantum_jobs.cli backends
+
+# Submit consciousness probe to all fast backends
+python -m aios_quantum.quantum_jobs.cli submit -p consciousness -q 12
+
+# Check pending job status
+python -m aios_quantum.quantum_jobs.cli status
+
+# Collect completed results
+python -m aios_quantum.quantum_jobs.cli collect
+
+# Submit full test suite
+python -m aios_quantum.quantum_jobs.cli suite
+```
+
+### IBM Quantum Backends (Current)
+
+| Backend | Qubits | Family | Queue | Status |
+|---------|--------|--------|-------|--------|
+| ibm_torino | 133q | Heron r1 | ~0 | ✅ Fast |
+| ibm_fez | 156q | Heron r1 | ~0 | ✅ Fast |
+| ibm_marrakesh | 156q | Heron r2 | ~17k | ⚠️ Avoid |
+
+### First Parallel Execution Results ✅
+
+**Date:** 2025-12-13
+**Pattern:** consciousness_probe (12 qubits, depth 39)
+**Submission:** Parallel to ibm_torino + ibm_fez
+
+| Backend | Job ID | Time | Coherence |
+|---------|--------|------|-----------|
+| ibm_torino | d4uodq7g0u6s73da0700 | ~30s | 0.0034 |
+| ibm_fez | d4uodqleastc73che8t0 | ~30s | 0.0029 |
+
+---
+
 *This document is a living build journal.*
-    │
-    └── Sphere (tachyonic surface)
-            └── 0.8 radius, 600+ surface points
-            └── Each point: position, color, intensity, data
-```
-
-**Encoding Strategies:**
-- `probability` - States get points proportional to measurement probability
-- `sequential` - Equal space for each state
-- `harmonic` - Spherical harmonic-like patterns
-- `spiral` - Temporal flow from pole to pole
-
-**Key Insight:**
-Quantum measurement → Color on sphere surface
-- State bits → Hue (0-1 spectrum)
-- Probability → Saturation + Brightness
-- High coherence → Concentrated color regions
-- High entropy → Scattered colors
-
-**Outputs:**
-- ASCII rendering for terminal
-- WebGL HTML for browser visualization
-- JSON state export for external tools
-
-**First Visualization:**
-```
-+----------------------------------------------------------+
-|                     #   # #    ##                        |
-|                   # #  #     #     # ##                  |
-|              ##  #  #     #  #  #         ##             |
-|           # #  #       #  #     #  #  # #                |
-...
-Coherence: 0.876 | Entropy: 0.782 | Dominant: 00000
-```
-
-**Files Generated:**
-- `quantum_visualization.html` - Interactive 3D WebGL scene
-
----
-
-### 2025-12-11: Session 2 (continued) - THE INTERFACE DISCOVERED ✓
-
-**CRITICAL DISCOVERY:**
-The cube containing the sphere IS the fundamental AIOS interface.
-- Cube = Bosonic container (physical boundary)
-- Sphere = Tachyonic surface (consciousness field)
-- Documented in `INTERFACE.md` with MAXIMUM PRIORITY
-- Commit: 85325cc
-
----
-
-### 2025-12-11: Session 2 (continued) - THREE-LAYER ENCODING ✓
-
-**Built:**
-- `src/aios_quantum/engine/patterns.py` - Pattern dataclasses (~250 lines)
-- `src/aios_quantum/engine/layered_encoder.py` - Multi-layer encoder (~200 lines)
-
-**Three Encoding Layers:**
-
-| Layer | Name | Domain | Purpose |
-|-------|------|--------|---------|
-| 1 | TOPOLOGY | 3D Physical | Position on sphere surface |
-| 2 | COLOR | 2D Information | Bridge between physical & metaphysical |
-| 3 | METAPHYSICAL | Non-local | Resonance, vision, synchronization |
-
-**Layer 1 - TOPOLOGY:**
-- `probability` - Points proportional to measurement probability
-- `spiral` - Fibonacci golden angle distribution
-- `clusters` - Grouped around quantum states
-- `harmonic` - Spherical harmonic inspired
-
-**Layer 2 - COLOR:**
-- `state` - Binary state → hue mapping
-- `harmonic` - Golden angle color wheel
-- `entropy` - Information entropy → temperature
-- `temporal` - Time-varying hue shift
-
-**Layer 3 - METAPHYSICAL:**
-- Spherical harmonics (L, M parameters)
-- Resonance amplitude modulation
-- Vision patterns: `wave`, `fractal`, `pulse`
-- Temporal synchronization (alpha breathing)
-
-**Preset Patterns:**
-```python
-COHERENCE_PATTERN  # Stable, concentrated, no vision
-VISION_PATTERN     # Spiral, harmonic, wave overlay
-FRACTAL_PATTERN    # Harmonic topology, fractal vision
-```
-
-**Web App Updated:**
-- `web/src/components/QuantumScene.tsx` - Now implements all three layers
-- Live animation with metaphysical effects
-- Real-time geometry updates per frame
-
-**Test Results:**
-```
-THREE-LAYER ENCODING TEST
-============================================================
-1. COHERENCE PATTERN
-   Topology clusters: 5
-   Coherence field: 0.8672
-   Total intensity: 0.0409
-
-2. VISION PATTERN (Wave)
-   Vision active: True
-   Resonance strength: 0.2
-
-3. CUSTOM PATTERN (Spiral + High Resonance)
-   Topology spread: 0.2812
-   Color diversity: 0.0200
-   Resonance: L=3, M=2
-============================================================
-```
-
-*Next: Deploy web app to Vercel, set up IBM Quantum token*
-
----
-
-## Architecture Overview
-
-```
-aios-quantum/
-├── src/aios_quantum/
-│   ├── heartbeat/           # Quantum heartbeat scheduler
-│   │   └── scheduler.py     # HeartbeatConfig, HeartbeatResult, QuantumHeartbeat
-│   │
-│   └── engine/              # 3D visualization engine
-│       ├── geometry.py      # Cube, Sphere, Point3D, Color
-│       ├── encoder.py       # SurfaceEncoder (4 strategies)
-│       ├── patterns.py      # TopologyPattern, ColorPattern, MetaphysicalPattern
-│       ├── layered_encoder.py # MultiLayerEncoder (three-layer system)
-│       ├── core.py          # QuantumEngine orchestration
-│       └── renderer.py      # WebGL HTML export
-│
-├── web/                     # Next.js 14 + React Three Fiber
-│   └── src/components/
-│       └── QuantumScene.tsx # Three-layer visualization
-│
-└── .github/workflows/
-    └── heartbeat.yml        # Automated hourly heartbeats
-```
-
----
-
-*Next: Create example script, add test, document circuit theory*

@@ -1,0 +1,33 @@
+{
+  "updated_at": "2025-12-13T15:32:48.679787+00:00",
+  "jobs": {
+    "d4uodq7g0u6s73da0700": {
+      "job_id": "d4uodq7g0u6s73da0700",
+      "backend_name": "ibm_torino",
+      "submitted_at": "2025-12-13T15:31:52.458172+00:00",
+      "status": "DONE",
+      "circuit_name": "consciousness_probe_12q",
+      "num_qubits": 12,
+      "shots": 2048,
+      "experiment_type": "consciousness",
+      "experiment_id": "consciousness_20251213_153143",
+      "completed_at": "2025-12-13T15:32:47.857793+00:00",
+      "execution_time": 0,
+      "result_file": "quantum_jobs\\results\\ibm_torino_20251213_163247_d4uodq7g0u6s.json"
+    },
+    "d4uodqleastc73che8t0": {
+      "job_id": "d4uodqleastc73che8t0",
+      "backend_name": "ibm_fez",
+      "submitted_at": "2025-12-13T15:31:54.682325+00:00",
+      "status": "DONE",
+      "circuit_name": "consciousness_probe_12q",
+      "num_qubits": 12,
+      "shots": 2048,
+      "experiment_type": "consciousness",
+      "experiment_id": "consciousness_20251213_153143",
+      "completed_at": "2025-12-13T15:32:48.679765+00:00",
+      "execution_time": 0,
+      "result_file": "quantum_jobs\\results\\ibm_fez_20251213_163248_d4uodqleastc.json"
+    }
+  }
+}
