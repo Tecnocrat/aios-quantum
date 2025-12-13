@@ -195,7 +195,7 @@ def main():
     submit_parser.add_argument(
         '--pattern', '-p', 
         default='consciousness',
-        help='Pattern name (consciousness, entanglement, walk, vqe, hypersphere)'
+        help='Pattern name (consciousness, entanglement, walk, vqe, hypersphere, pi)'
     )
     submit_parser.add_argument(
         '--backends', '-b',

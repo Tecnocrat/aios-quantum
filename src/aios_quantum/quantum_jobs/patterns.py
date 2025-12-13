@@ -245,6 +245,9 @@ def create_pattern_suite(
     return suite
 
 
+# Import PI Pulse
+from .pi_pulse import create_pi_pulse_circuit
+
 # Quick access to patterns
 PATTERNS = {
     'consciousness': create_consciousness_probe,
@@ -252,4 +255,5 @@ PATTERNS = {
     'walk': create_quantum_walk,
     'vqe': create_variational_layer,
     'hypersphere': create_hypersphere_sampler,
+    'pi': lambda num_qubits=8, **kw: create_pi_pulse_circuit(precision_qubits=num_qubits),
 }

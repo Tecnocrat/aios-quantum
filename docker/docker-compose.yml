@@ -1,0 +1,98 @@
+# =============================================================================
+# AIOS QUANTUM - DOCKER COMPOSE ORCHESTRATION
+# =============================================================================
+# Full stack deployment with:
+# - Next.js quantum visualizer (nginx)
+# - Python quantum backend (optional)
+# - Prometheus metrics (optional)
+# =============================================================================
+
+version: '3.8'
+
+services:
+  # ===========================================================================
+  # QUANTUM VISUALIZER (Production Web App)
+  # ===========================================================================
+  visualizer:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: aios-quantum-viz
+    ports:
+      - "${VIZ_PORT:-3000}:80"
+    environment:
+      - NODE_ENV=production
+    volumes:
+      # Mount quantum data for live updates
+      - ../quantum_jobs/results:/usr/share/nginx/html/results:ro
+      - ../cardiogram_results:/usr/share/nginx/html/cardiogram:ro
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.quantum.rule=Host(`quantum.aios.local`)"
+
+  # ===========================================================================
+  # QUANTUM BACKEND (Python API - Optional)
+  # ===========================================================================
+  backend:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.backend
+    container_name: aios-quantum-backend
+    ports:
+      - "${API_PORT:-8000}:8000"
+    environment:
+      - IBM_QUANTUM_TOKEN=${IBM_QUANTUM_TOKEN}
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ../quantum_jobs:/app/quantum_jobs
+      - ../cardiogram_results:/app/cardiogram_results
+    depends_on:
+      - visualizer
+    restart: unless-stopped
+    profiles:
+      - full  # Only start with --profile full
+
+  # ===========================================================================
+  # PROMETHEUS METRICS (Optional)
+  # ===========================================================================
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: aios-prometheus
+    ports:
+      - "${PROM_PORT:-9090}:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    restart: unless-stopped
+    profiles:
+      - monitoring
+
+  # ===========================================================================
+  # GRAFANA DASHBOARDS (Optional)
+  # ===========================================================================
+  grafana:
+    image: grafana/grafana:latest
+    container_name: aios-grafana
+    ports:
+      - "${GRAFANA_PORT:-3001}:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-aios-quantum}
+    volumes:
+      - grafana-data:/var/lib/grafana
+    depends_on:
+      - prometheus
+    restart: unless-stopped
+    profiles:
+      - monitoring
+
+volumes:
+  grafana-data:
+
+networks:
+  default:
+    name: aios-quantum-network

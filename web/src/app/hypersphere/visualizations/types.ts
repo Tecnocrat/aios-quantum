@@ -13,6 +13,7 @@ import { ReactNode } from 'react'
 export type VisualizationMode = 
   | 'topology'       // Original: 3D mesh with quantum-displaced surface
   | 'unified'        // New: Dark sphere with hypergates and floating experiments
+  | 'experiments'    // NEW: All experiments cloud from compiled data
   | 'constellation'  // Future: Star map of quantum states
   | 'timeline'       // Future: Temporal flow visualization
   | 'network'        // Future: Entanglement network graph
@@ -30,6 +31,16 @@ export interface VisualizationModeConfig {
 }
 
 export const VISUALIZATION_MODES: VisualizationModeConfig[] = [
+  {
+    id: 'experiments',
+    name: 'Experiment Cloud',
+    description: 'ALL quantum experiments from GitHub, IBM Quantum, and local files. 124+ data points.',
+    icon: '☁️',
+    color: '#00ffff',
+    dataSource: 'both',
+    available: true,
+    preview: 'linear-gradient(135deg, #000022 0%, #001144 50%, #00ffff 100%)'
+  },
   {
     id: 'topology',
     name: 'Topology Mesh',

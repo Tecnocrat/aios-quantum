@@ -1,5 +1,5 @@
 {
-  "updated_at": "2025-12-13T15:32:48.679787+00:00",
+  "updated_at": "2025-12-13T17:07:43.739947+00:00",
   "jobs": {
     "d4uodq7g0u6s73da0700": {
       "job_id": "d4uodq7g0u6s73da0700",
@@ -28,6 +28,34 @@
       "completed_at": "2025-12-13T15:32:48.679765+00:00",
       "execution_time": 0,
       "result_file": "quantum_jobs\\results\\ibm_fez_20251213_163248_d4uodqleastc.json"
+    },
+    "d4upqicgk3fc73au7rig": {
+      "job_id": "d4upqicgk3fc73au7rig",
+      "backend_name": "ibm_torino",
+      "submitted_at": "2025-12-13T17:07:20.923116+00:00",
+      "status": "DONE",
+      "circuit_name": "pi_pulse_8p",
+      "num_qubits": 9,
+      "shots": 2048,
+      "experiment_type": "pi",
+      "experiment_id": "pi_20251213_170707",
+      "completed_at": "2025-12-13T17:07:42.934743+00:00",
+      "execution_time": null,
+      "result_file": null
+    },
+    "d4upqiuaec6c738rkl2g": {
+      "job_id": "d4upqiuaec6c738rkl2g",
+      "backend_name": "ibm_fez",
+      "submitted_at": "2025-12-13T17:07:23.162804+00:00",
+      "status": "DONE",
+      "circuit_name": "pi_pulse_8p",
+      "num_qubits": 9,
+      "shots": 2048,
+      "experiment_type": "pi",
+      "experiment_id": "pi_20251213_170707",
+      "completed_at": "2025-12-13T17:07:43.739926+00:00",
+      "execution_time": null,
+      "result_file": null
     }
   }
 }

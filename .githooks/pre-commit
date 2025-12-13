@@ -41,6 +41,11 @@ SAFE_INDICATORS=(
     'INSERT_'
     'REPLACE_'
     'TODO'
+    # Quantum experiment identifiers (not secrets)
+    'local_.*_2025'
+    'ibm_.*_2025'
+    'hypersphere_.*_2025'
+    'pi_pulse_.*_2025'
 )
 
 # Files to always skip
@@ -58,6 +63,8 @@ SKIP_FILES=(
     '*.lock'
     'package-lock.json'
     'yarn.lock'
+    # Quantum experiment data (contains experiment IDs, not secrets)
+    'quantum_experiments.json'
 )
 
 # Get staged files
