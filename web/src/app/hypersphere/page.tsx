@@ -5,6 +5,7 @@ import { OrbitControls, Line, Html } from '@react-three/drei'
 import { Suspense, useState, useEffect, useRef, useMemo } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
+import Link from 'next/link'
 
 // =============================================================================
 // TYPES
@@ -416,6 +417,38 @@ export default function HyperspherePage() {
       }}>
         Drag to rotate • Scroll to zoom
       </div>
+      
+      <Link href="/hypersphere/unified" style={{
+        position: 'absolute',
+        bottom: 20,
+        right: 20,
+        color: '#0ff',
+        fontSize: 11,
+        fontFamily: 'monospace',
+        background: 'rgba(0,255,255,0.1)',
+        padding: '8px 12px',
+        borderRadius: 4,
+        border: '1px solid #0ff',
+        textDecoration: 'none',
+      }}>
+        View Unified Surface →
+      </Link>
+      
+      <Link href="/hypersphere/visualizations" style={{
+        position: 'absolute',
+        bottom: 60,
+        right: 20,
+        color: '#ff00ff',
+        fontSize: 11,
+        fontFamily: 'monospace',
+        background: 'rgba(255,0,255,0.1)',
+        padding: '8px 12px',
+        borderRadius: 4,
+        border: '1px solid #ff00ff',
+        textDecoration: 'none',
+      }}>
+        🔮 Multi-Viz System
+      </Link>
     </main>
   )
 }

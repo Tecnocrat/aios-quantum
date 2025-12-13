@@ -1,0 +1,18 @@
+{
+  "experiment_type": "bell",
+  "id": "bell_2025-12-13T10-31-34.595204",
+  "counts": {
+    "01": 64,
+    "11": 959
+  },
+  "timestamp": "2025-12-13T10:31:34.595204",
+  "n_qubits": 2,
+  "n_shots": 1024,
+  "circuit_depth": 6,
+  "backend": "mock_simulator",
+  "coherence": 0.9374389051808406,
+  "entropy": 0.3375287114536499,
+  "target_value": "entangled",
+  "found_value": 3,
+  "success_probability": 0.9374389051808406
+}

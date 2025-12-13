@@ -1,22 +1,58 @@
 # IBM Cloud Setup Guide
 ## Step-by-Step Implementation for Topology Storage
 
-**Status:** 🚀 READY TO IMPLEMENT  
+**Status:** ✅ FULLY CONFIGURED  
 **Target User:** Tecnocrat (jesussard@gmail.com)  
 **Prerequisites:** IBM Cloud account, IBM Quantum Platform access  
-**Estimated Time:** 45 minutes
+**Completed:** December 13, 2025
+
+---
+
+## � INTEGRATION STATUS OVERVIEW
+
+| Component | Status | Notes |
+|-----------|--------|-------|
+| **Part 1: IBM Cloud Console** | ✅ COMPLETE | Account, COS, Cloudant provisioned |
+| **Part 2: Local Environment** | ✅ COMPLETE | .env configured, packages installed |
+| **Part 3: Implementation** | ✅ COMPLETE | Uploader module, exotic experiments |
+| **Part 4: Heartbeat Integration** | 🚧 TO DEVELOP | Auto-upload not yet connected |
+| **Part 5: Verification & Monitoring** | 🚧 TO DEVELOP | Cloudant query not implemented |
+| **Live Dashboard** | 🚧 TO DEVELOP | Next.js cloud API route pending |
+| **Unified Visualization** | ✅ COMPLETE | /hypersphere/unified with all experiments |
+
+### 🔴 PENDING ACTION ITEMS
+
+```
+TODO: Query data from Cloudant
+  - Create examples/query_cloudant.py
+  - Implement time-series retrieval
+  - Add error trend analysis
+
+TODO: Backfill existing heartbeats to cloud
+  - Run: python examples/backfill_cloud_data.py
+  - Upload 60+ heartbeat files to COS
+  - Create Cloudant documents
+
+TODO: Auto-upload integration
+  - Modify heartbeat workflow to upload on completion
+  - Update config.py with cloud settings
+```
 
 ---
 
 ## 📋 Pre-Flight Checklist
 
-- [x] IBM Quantum Platform access (existing: `open-instance`)
-- [x] 4 heartbeats collected locally
-- [x] Hypersphere visualization working
-- [x] IBM Cloud trial account active
-- [x] IBM Cloud CLI installed
-- [ ] API keys generated
-- [ ] Cloud services provisioned
+- [x] IBM Quantum Platform access (existing: `open-instance`) ✅ COMPLETE
+- [x] 4 heartbeats collected locally ✅ COMPLETE (60+ heartbeats via GitHub workflow)
+- [x] Hypersphere visualization working ✅ COMPLETE (localhost:3000/hypersphere/)
+- [x] IBM Cloud trial account active (Tecnocrat) ✅ COMPLETE
+- [x] IBM Cloud CLI installed (v2.40.0) ✅ COMPLETE
+- [x] API keys generated (cos-aios-key, cloudant-aios-key) ✅ COMPLETE
+- [x] Cloud services provisioned (COS + Cloudant) ✅ COMPLETE
+- [x] Python packages installed (ibm-cos-sdk, ibmcloudant, ibm-watson) ✅ COMPLETE
+- [x] Connection tests passed ✅ COMPLETE
+
+**📄 See:** [IBM_CLOUD_CONFIG.md](IBM_CLOUD_CONFIG.md) for full configuration reference
 
 ---
 
@@ -330,23 +366,23 @@ python -c "from cloudant.client import Cloudant; print('✓ Cloudant ready')"
 
 ---
 
-## Part 3: Implementation (20 min)
+## Part 3: Implementation (20 min) — ✅ COMPLETE / 🔄 BACKFILL PENDING
 
-### Step 3.1: Create Cloud Uploader Module
-
-**Agent Action:** I'll create `src/aios_quantum/cloud/uploader.py` now
+### Step 3.1: Create Cloud Uploader Module — ✅ COMPLETE
 
 **File:** `src/aios_quantum/cloud/uploader.py`
 
-This will implement:
-- `QuantumTopologyUploader` class
-- Parallel uploads to COS + Cloudant
-- Error handling and retry logic
-- Connection to existing heartbeat system
+**Status:** Module created and tested with `ibmcloudant` SDK (v0.11.2)
+
+Implements:
+- ✅ `QuantumTopologyUploader` class
+- ✅ Parallel uploads to COS + Cloudant
+- ✅ Error handling and retry logic
+- 🔄 Connection to existing heartbeat system (pending auto-upload integration)
 
 ---
 
-### Step 3.2: Test Connection
+### Step 3.2: Test Connection — ✅ COMPLETE
 
 **Manual test script:** `examples/test_cloud_upload.py`
 
@@ -355,11 +391,12 @@ This will implement:
 python examples/test_cloud_upload.py
 ```
 
-**Expected output:**
+**Test Results (Dec 13, 2025):**
 ```
-Connecting to IBM Cloud services...
-✓ Cloud Object Storage: Connected (aios-quantum-topology)
-✓ Cloudant Database: Connected (quantum_topology)
+✓ PASS     Cloud Object Storage - Connected, 2 buckets found
+✓ PASS     Cloudant Database - Connected, quantum_topology exists
+✓ PASS     Uploader Module - Initialized successfully
+🚀 All systems operational!
 
 Testing upload with sample heartbeat...
 ✓ Uploaded to COS: cos://raw/cardiogram/2025-12-12/test_heartbeat.json
@@ -370,7 +407,14 @@ All systems operational! 🚀
 
 ---
 
-### Step 3.3: Upload Existing Heartbeats
+### Step 3.3: Upload Existing Heartbeats — 🔄 IN PROGRESS (PENDING EXECUTION)
+
+**Status:** Script ready, data backfill not yet executed
+
+**Current Data Inventory:**
+- `cardiogram_results/`: 3 cardiogram + 3 surface + 1 hypersphere_surface files
+- `heartbeat_results/`: 7 beat files + 1 real_beat + 1 job result
+- **GitHub Workflow:** 60 heartbeat runs completed (as of Dec 13, 2025)
 
 **Script:** `examples/backfill_cloud_data.py`
 
@@ -384,6 +428,8 @@ python examples/backfill_cloud_data.py
 2. Uploads each to COS bucket
 3. Creates corresponding Cloudant documents
 4. Links hypersphere surface data
+
+**TODO:** Also backfill `heartbeat_results/` data
 
 **Expected output:**
 ```
@@ -406,7 +452,7 @@ https://cloud.ibm.com/objectstorage/crn%3Av1%3A...
 
 ---
 
-### Step 3.4: Verify in Cloud Console
+### Step 3.4: Verify in Cloud Console — 🔄 PENDING BACKFILL
 
 **COS Bucket Check:**
 1. Open IBM Cloud → Cloud Object Storage → `aios-quantum-topology`
@@ -436,13 +482,15 @@ https://cloud.ibm.com/objectstorage/crn%3Av1%3A...
 
 ---
 
-## Part 4: Integration with Heartbeat System (Automatic)
+## Part 4: Integration with Heartbeat System (Automatic) — 🚧 TO DEVELOP
 
-### Step 4.1: Update Cardiogram Processor
+### Step 4.1: Update Cardiogram Processor — 🚧 TO DEVELOP
 
-**Agent Action:** I'll modify `src/aios_quantum/circuits/consciousness_circuits.py`
+**Status:** Not yet implemented - local-only save currently active
 
-**What changes:**
+**Target File:** `src/aios_quantum/circuits/consciousness_circuits.py`
+
+**What needs to change:**
 ```python
 # OLD: Save to local file only
 save_cardiogram_results(data, "cardiogram_results/")
@@ -454,9 +502,13 @@ await cloud_uploader.upload_heartbeat(data)  # Parallel upload
 
 **Result:** Every new heartbeat automatically uploads to IBM Cloud
 
+**Priority:** MEDIUM (backfill existing data first)
+
 ---
 
-### Step 4.2: Enable Cloud Uploads
+### Step 4.2: Enable Cloud Uploads — 🚧 TO DEVELOP
+
+**Status:** CloudConfig class not yet added to config.py
 
 **File:** `src/aios_quantum/config.py`
 
@@ -481,38 +533,41 @@ else:
 
 ---
 
-## Part 5: Verification & Monitoring (Ongoing)
+## Part 5: Verification & Monitoring (Ongoing) — 🚧 TO DEVELOP
 
-### Step 5.1: Query Cloudant from Python
+### Step 5.1: Query Cloudant from Python — 🚧 TO DEVELOP
+
+**Status:** Code example provided, utility script not yet created
+
+**TODO:** Create `examples/query_cloudant.py` script for easy data queries
 
 **Example: Get latest heartbeats**
 ```python
-from cloudant.client import Cloudant
+# NOTE: Uses new ibmcloudant SDK (not deprecated cloudant library)
+from ibmcloudant.cloudant_v1 import CloudantV1
+from ibm_cloud_sdk_core.authenticators import IAMAuthenticator
 import os
 from dotenv import load_dotenv
 
 load_dotenv()
 
-client = Cloudant.iam(
-    account_name=os.getenv('CLOUDANT_ACCOUNT'),
-    api_key=os.getenv('CLOUDANT_API_KEY'),
-    connect=True
-)
-
-db = client['quantum_topology']
+authenticator = IAMAuthenticator(os.getenv('CLOUDANT_API_KEY'))
+client = CloudantV1(authenticator=authenticator)
+client.set_service_url(os.getenv('CLOUDANT_URL'))
 
 # Get last 10 heartbeats
-result = db.get_query_result(
+response = client.post_find(
+    db='quantum_topology',
     selector={'type': 'heartbeat'},
     sort=[{'timestamp': 'desc'}],
     limit=10
 )
 
-for doc in result:
+for doc in response.get_result()['docs']:
     print(f"{doc['timestamp']}: {doc['backend']['name']} - {doc['topology']['statistics']['mean_error']:.4f}")
 ```
 
-**Expected output:**
+**Expected output (after backfill):**
 ```
 2025-12-12T19:57:36: ibm_fez - 0.0080
 2025-12-12T19:56:42: ibm_fez - 0.0098
@@ -522,31 +577,38 @@ for doc in result:
 
 ---
 
-### Step 5.2: Build Live Dashboard (Next Phase)
+### Step 5.2: Build Live Dashboard (Next Phase) — 🚧 TO DEVELOP
+
+**Status:** Route stub exists (`web/src/app/api/surface/latest/route.ts`), cloud route not yet created
+
+**Current State:**
+- ✅ `api/surface/latest/route.ts` - reads from local filesystem
+- 🚧 `api/surface/cloud/route.ts` - **NOT YET CREATED** - would read from Cloudant
 
 **Goal:** Replace local JSON files with cloud data in Next.js app
 
-**API Route:** `web/src/app/api/surface/cloud/route.ts`
+**API Route TO CREATE:** `web/src/app/api/surface/cloud/route.ts`
 ```typescript
 // Fetch from Cloudant instead of local filesystem
-import { Cloudant } from '@ibm-cloud/cloudant';
+import { CloudantV1 } from '@ibm-cloud/cloudant';
+import { IamAuthenticator } from 'ibm-cloud-sdk-core';
 
 export async function GET() {
-  const client = Cloudant.newInstance({
-    serviceUrl: process.env.CLOUDANT_URL,
+  const client = CloudantV1.newInstance({
+    serviceUrl: process.env.CLOUDANT_URL!,
     authenticator: new IamAuthenticator({
-      apikey: process.env.CLOUDANT_API_KEY
+      apikey: process.env.CLOUDANT_API_KEY!
     })
   });
   
-  const db = client.db.use('quantum_topology');
-  const result = await db.find({
+  const result = await client.postFind({
+    db: 'quantum_topology',
     selector: { type: 'heartbeat' },
     sort: [{ timestamp: 'desc' }],
     limit: 20
   });
   
-  return Response.json(result.docs);
+  return Response.json(result.result.docs);
 }
 ```
 
@@ -554,17 +616,19 @@ export async function GET() {
 
 ---
 
-## 🎯 Success Criteria
+## 🎯 Success Criteria — CURRENT STATUS
 
 **You've successfully set up IBM Cloud topology storage when:**
 
-- [x] COS bucket contains 4+ heartbeat JSON files
-- [x] Cloudant database has 4+ documents with topology data
-- [x] Python script can query Cloudant and retrieve heartbeats
-- [x] New heartbeats automatically upload to cloud
-- [x] Hypersphere visualization can be fed from cloud data
-- [x] No API errors in logs
-- [x] Storage costs remain $0/month (within free tier)
+| Criterion | Status | Notes |
+|-----------|--------|-------|
+| COS bucket contains 4+ heartbeat JSON files | 🔄 PENDING | Backfill script ready but not run |
+| Cloudant database has 4+ documents with topology data | 🔄 PENDING | Database exists, data not uploaded |
+| Python script can query Cloudant and retrieve heartbeats | 🚧 TO DEVELOP | Need to create query_cloudant.py |
+| New heartbeats automatically upload to cloud | 🚧 TO DEVELOP | Auto-upload not integrated |
+| Hypersphere visualization can be fed from cloud data | 🚧 TO DEVELOP | Cloud API route not created |
+| No API errors in logs | ✅ COMPLETE | Connection tests passing |
+| Storage costs remain $0/month (within free tier) | ✅ COMPLETE | Within limits |
 
 ---
 

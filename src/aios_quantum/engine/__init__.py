@@ -36,6 +36,23 @@ from .layered_encoder import (
     create_vision_encoder,
 )
 
+# Unified experiment system
+from .experiment_taxonomy import (
+    ExperimentClass,
+    ExperimentOrigin,
+    ExperimentMetadata,
+    GeometricSignature,
+    ColorFamily,
+    RelationalRule,
+    classify_experiment,
+)
+from .experiment_registry import (
+    ExperimentRegistry,
+    UnifiedExperiment,
+    build_unified_surface,
+    load_registry,
+)
+
 __all__ = [
     # Core
     "QuantumEngine",
@@ -73,4 +90,17 @@ __all__ = [
     # Rendering
     "WebGLRenderer",
     "export_webgl",
+    
+    # Experiment Taxonomy & Registry
+    "ExperimentClass",
+    "ExperimentOrigin",
+    "ExperimentMetadata",
+    "GeometricSignature",
+    "ColorFamily",
+    "RelationalRule",
+    "classify_experiment",
+    "ExperimentRegistry",
+    "UnifiedExperiment",
+    "build_unified_surface",
+    "load_registry",
 ]

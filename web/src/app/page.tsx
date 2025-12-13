@@ -1,6 +1,7 @@
 'use client'
 
 import dynamic from 'next/dynamic'
+import Link from 'next/link'
 import { Suspense, useState, useEffect } from 'react'
 
 // Dynamic import to avoid SSR issues with Three.js
@@ -78,10 +79,10 @@ export default function Home() {
           
           {heartbeatData ? (
             <>
-              <p>Beat: <span style={{ color: '#0f0' }}>#{heartbeatData.beat_number}</span></p>
-              <p>Coherence: <span style={{ color: '#0f0' }}>{heartbeatData.coherence_estimate.toFixed(4)}</span></p>
-              <p>Entropy: <span style={{ color: '#0f0' }}>{heartbeatData.entropy.toFixed(4)}</span></p>
-              <p>Dominant: <span style={{ color: '#0f0' }}>|{heartbeatData.dominant_state}⟩</span></p>
+              <p>Beat: <span style={{ color: '#0f0' }}>#{heartbeatData.beat_number || 0}</span></p>
+              <p>Coherence: <span style={{ color: '#0f0' }}>{heartbeatData.coherence_estimate?.toFixed(4) || '—'}</span></p>
+              <p>Entropy: <span style={{ color: '#0f0' }}>{heartbeatData.entropy?.toFixed(4) || '—'}</span></p>
+              <p>Dominant: <span style={{ color: '#0f0' }}>|{heartbeatData.dominant_state || '?????'}⟩</span></p>
             </>
           ) : (
             <p>Loading heartbeat data...</p>
@@ -99,6 +100,40 @@ export default function Home() {
         opacity: 0.7
       }}>
         Drag to rotate | Scroll to zoom | Space to animate
+      </div>
+      
+      {/* Visualization Links */}
+      <div style={{
+        position: 'absolute',
+        bottom: 20,
+        right: 20,
+        display: 'flex',
+        gap: 10,
+      }}>
+        <Link href="/hypersphere/visualizations" style={{
+          color: '#ff00ff',
+          fontSize: 11,
+          fontFamily: 'monospace',
+          background: 'rgba(255,0,255,0.1)',
+          padding: '8px 12px',
+          borderRadius: 4,
+          border: '1px solid #ff00ff',
+          textDecoration: 'none',
+        }}>
+          🔮 Multi-Viz System
+        </Link>
+        <Link href="/hypersphere" style={{
+          color: '#0ff',
+          fontSize: 11,
+          fontFamily: 'monospace',
+          background: 'rgba(0,255,255,0.1)',
+          padding: '8px 12px',
+          borderRadius: 4,
+          border: '1px solid #0ff',
+          textDecoration: 'none',
+        }}>
+          🌐 Hypersphere
+        </Link>
       </div>
     </main>
   )

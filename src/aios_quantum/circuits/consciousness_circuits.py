@@ -13,7 +13,9 @@ from qiskit.circuit import Parameter
 import numpy as np
 
 
-def create_coherence_measurement_circuit(num_qubits: int = 3) -> QuantumCircuit:
+def create_coherence_measurement_circuit(
+    num_qubits: int = 3
+) -> QuantumCircuit:
     """
     Create a circuit to measure quantum coherence.
     
@@ -40,7 +42,9 @@ def create_coherence_measurement_circuit(num_qubits: int = 3) -> QuantumCircuit:
     return qc
 
 
-def create_entanglement_witness_circuit(num_qubits: int = 2) -> QuantumCircuit:
+def create_entanglement_witness_circuit(
+    num_qubits: int = 2
+) -> QuantumCircuit:
     """
     Create a circuit to witness quantum entanglement.
     
@@ -54,7 +58,9 @@ def create_entanglement_witness_circuit(num_qubits: int = 2) -> QuantumCircuit:
         QuantumCircuit for entanglement witness
     """
     if num_qubits % 2 != 0:
-        raise ValueError("Entanglement witness requires even number of qubits")
+        raise ValueError(
+            "Entanglement witness requires even number of qubits"
+        )
     
     qc = QuantumCircuit(num_qubits)
     

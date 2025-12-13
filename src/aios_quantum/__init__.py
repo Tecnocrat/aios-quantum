@@ -1,8 +1,8 @@
 """
 AIOS Quantum - Quantum Computing Integration for AIOS
 
-This package provides quantum computing capabilities using IBM Quantum Platform
-and Qiskit Runtime for the AIOS project.
+This package provides quantum computing capabilities using
+IBM Quantum Platform and Qiskit Runtime for the AIOS project.
 
 6th Supercell: Quantum Intelligence
 """

@@ -96,7 +96,10 @@ class QuantumSupercell(QuantumSupercellInterface):
 
             # Measure initial coherence
             self._current_coherence = await self.measure_coherence()
-            logger.info(f"Initial coherence measurement: {self._current_coherence:.4f}")
+            logger.info(
+                f"Initial coherence measurement: "
+                f"{self._current_coherence:.4f}"
+            )
 
             self._initialized = True
             logger.info("Quantum Supercell initialized successfully")
@@ -123,15 +126,22 @@ class QuantumSupercell(QuantumSupercellInterface):
             message.source_supercell = SupercellType.QUANTUM_INTELLIGENCE
 
             # Handle quantum communication types
-            if message.communication_type == CommunicationType.QUANTUM_COHERENT:
+            if (
+                message.communication_type
+                == CommunicationType.QUANTUM_COHERENT
+            ):
                 # Execute any attached circuit
-                if message.quantum_circuit_id and message.payload.get("circuit"):
+                if (
+                    message.quantum_circuit_id
+                    and message.payload.get("circuit")
+                ):
                     result = await self.execute_circuit(
                         message.payload["circuit"],
                         shots=message.shots,
                     )
                     message.measurement_results = result.get("counts")
-                    message.execution_time_ms = result.get("execution_time_ms")
+                    execution_time = result.get("execution_time_ms")
+                    message.execution_time_ms = execution_time
                     message.backend_name = result.get("backend_name")
                     message.job_id = result.get("job_id")
 
@@ -179,7 +189,9 @@ class QuantumSupercell(QuantumSupercellInterface):
                         message_id=str(uuid.uuid4()),
                         correlation_id=message.message_id,
                         target_supercell=message.source_supercell,
-                        communication_type=CommunicationType.QUANTUM_MEASUREMENT,
+                        communication_type=(
+                            CommunicationType.QUANTUM_MEASUREMENT
+                        ),
                         operation="circuit_result",
                         payload=result,
                         quantum_coherence=self._current_coherence,

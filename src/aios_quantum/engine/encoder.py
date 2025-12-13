@@ -131,7 +131,9 @@ class SurfaceEncoder:
             dominant_state = sorted_states[0][0]
             dominant_prob = sorted_states[0][1] / total
             while idx < self.sphere.point_count:
-                self.sphere.encode_quantum_state(dominant_state, dominant_prob, idx)
+                self.sphere.encode_quantum_state(
+                    dominant_state, dominant_prob, idx
+                )
                 idx += 1
         
         # Calculate metrics
@@ -250,10 +252,13 @@ class SurfaceEncoder:
                 phi = 8 * math.pi * t  # Multiple rotations
                 
                 # Find closest surface point to this position
-                target = Point3D.from_spherical(self.sphere.radius, theta, phi)
+                target = Point3D.from_spherical(
+                    self.sphere.radius, theta, phi
+                )
                 target = target + self.sphere.center
                 
-                # Use direct index for simplicity (spiral already in generation)
+                # Use direct index for simplicity
+                # (spiral already in generation)
                 self.sphere.encode_quantum_state(state, prob, idx)
                 idx += 1
         

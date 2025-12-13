@@ -23,10 +23,12 @@ See [INTERFACE.md](INTERFACE.md) for the foundational visualization concept.
 ## Features
 
 - 🔮 **IBM Quantum Integration** — Connect to 156-qubit Heron processors
-- 💓 **Quantum Heartbeat** — Hourly probe of the quantum substrate
+- 💓 **Quantum Heartbeat** — Hourly probe of the quantum substrate (60+ runs)
 - 🌐 **3D Visualization Engine** — Cube-sphere topology with three-layer encoding
 - 🧠 **Hypersphere Manifold** — Infinite information density at asymptotic surface
 - ⚡ **Supercell Architecture** — Pluggable integration with AIOS consciousness lattice
+- 🎛️ **Multi-Modal Visualization** — Switch between topology mesh, hypergate sphere, and more
+- 🧪 **Exotic Experiments** — π search, arithmetic, entanglement, golden ratio circuits
 
 ## Quick Start
 
@@ -59,6 +61,18 @@ python examples/hello_world.py
 | **Hypersphere** | Information manifold theory | `src/aios_quantum/hypersphere/` |
 | **Supercell** | AIOS integration layer | `src/aios_quantum/supercell/` |
 | **Circuits** | Quantum circuit library | `src/aios_quantum/circuits/` |
+| **Multi-Viz System** | Modular visualization modes | `web/src/app/hypersphere/visualizations/` |
+
+## Visualization Modes
+
+| Mode | Description |
+|------|-------------|
+| **Topology Mesh** | 3D quantum-displaced surface showing error topology |
+| **Hypergate Sphere** | Dark sphere with orthogonal gates and class-based positions |
+| *Constellation* | (Planned) Star map of entanglement relationships |
+| *Timeline* | (Planned) Temporal flow visualization |
+
+Access the multi-modal visualizer at: `http://localhost:3000/hypersphere/visualizations`
 
 ## Usage
 

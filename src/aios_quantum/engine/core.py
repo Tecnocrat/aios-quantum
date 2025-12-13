@@ -265,8 +265,10 @@ class QuantumEngine:
         
         avg_intensity = 0
         if self.sphere.point_count > 0:
-            avg_intensity = sum(sp.intensity for sp in self.sphere.surface_points)
-            avg_intensity /= self.sphere.point_count
+            total_intensity = sum(
+                sp.intensity for sp in self.sphere.surface_points
+            )
+            avg_intensity = total_intensity / self.sphere.point_count
         
         # Color distribution
         states = {}

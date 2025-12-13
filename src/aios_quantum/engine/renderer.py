@@ -28,9 +28,14 @@ def generate_webgl_html(
     surface_json = json.dumps(state.surface_data)
     
     # Pre-compute display values
-    coherence_val = f"{state.encoding_result['coherence']:.4f}" if state.encoding_result else 'N/A'
-    entropy_val = f"{state.encoding_result['entropy']:.4f}" if state.encoding_result else 'N/A'
-    dominant_val = state.encoding_result['dominant_state'] if state.encoding_result else 'N/A'
+    if state.encoding_result:
+        coherence_val = f"{state.encoding_result['coherence']:.4f}"
+        entropy_val = f"{state.encoding_result['entropy']:.4f}"
+        dominant_val = state.encoding_result['dominant_state']
+    else:
+        coherence_val = 'N/A'
+        entropy_val = 'N/A'
+        dominant_val = 'N/A'
     
     html = f'''<!DOCTYPE html>
 <html>

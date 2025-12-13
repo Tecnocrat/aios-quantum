@@ -4,10 +4,11 @@ Quantum Task Queue System
 AINLP Provenance:
   origin: opus (architect)
   created: 2025-12-11
-  purpose: Define and manage quantum execution tasks for multi-agent workflow
+  purpose: Define and manage quantum execution tasks for
+           multi-agent workflow
 
-This module provides the core task abstraction for the AIOS multi-agent system.
-Tasks are the atomic units of work that can be:
+This module provides the core task abstraction for the
+AIOS multi-agent system. Tasks are the atomic units of work that can be:
   - Created by CUBE (human)
   - Orchestrated by OPUS (architect)
   - Executed by BKG (background agent) for file operations
@@ -50,7 +51,8 @@ class QuantumTask:
     A quantum execution task.
     
     This is the atomic unit of work in the AIOS multi-agent system.
-    Tasks flow: CUBE/OPUS creates -> BKG prepares -> IBM executes -> Results stored
+    Tasks flow: CUBE/OPUS creates -> BKG prepares ->
+                IBM executes -> Results stored
     """
     
     # Identity
@@ -59,7 +61,8 @@ class QuantumTask:
     description: str = ""
     
     # Task specification
-    circuit_type: str = "bell_state"  # bell_state, ghz_state, consciousness, custom
+    # bell_state, ghz_state, consciousness, custom
+    circuit_type: str = "bell_state"
     circuit_params: Dict[str, Any] = field(default_factory=dict)
     shots: int = 1024
     
@@ -73,7 +76,9 @@ class QuantumTask:
     assigned_agent: Optional[str] = None
     
     # Timestamps
-    created_at: str = field(default_factory=lambda: datetime.now().isoformat())
+    created_at: str = field(
+        default_factory=lambda: datetime.now().isoformat()
+    )
     started_at: Optional[str] = None
     completed_at: Optional[str] = None
     
@@ -217,7 +222,11 @@ class TaskQueue:
         
         return task
     
-    def complete_active_task(self, result: Dict[str, Any], qpu_time: float) -> None:
+    def complete_active_task(
+        self,
+        result: Dict[str, Any],
+        qpu_time: float
+    ) -> None:
         """Mark the active task as completed and archive it."""
         active = self._load_json(self.ACTIVE_FILE)
         if not active:
@@ -227,7 +236,9 @@ class TaskQueue:
         task.complete(result, qpu_time)
         
         # Archive to completed directory
-        archive_path = self.queue_path / self.COMPLETED_DIR / f"{task.id}.json"
+        archive_path = (
+            self.queue_path / self.COMPLETED_DIR / f"{task.id}.json"
+        )
         with open(archive_path, "w") as f:
             json.dump(task.to_dict(), f, indent=2)
         
@@ -244,7 +255,9 @@ class TaskQueue:
         task.fail(error)
         
         # Archive failure
-        archive_path = self.queue_path / self.COMPLETED_DIR / f"{task.id}.json"
+        archive_path = (
+            self.queue_path / self.COMPLETED_DIR / f"{task.id}.json"
+        )
         with open(archive_path, "w") as f:
             json.dump(task.to_dict(), f, indent=2)
         

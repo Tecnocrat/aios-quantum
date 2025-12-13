@@ -71,7 +71,10 @@ class Color:
         return (self.r, self.g, self.b, self.a)
     
     def to_hex(self) -> str:
-        return f"#{int(self.r*255):02x}{int(self.g*255):02x}{int(self.b*255):02x}"
+        r_hex = f"{int(self.r*255):02x}"
+        g_hex = f"{int(self.g*255):02x}"
+        b_hex = f"{int(self.b*255):02x}"
+        return f"#{r_hex}{g_hex}{b_hex}"
     
     @staticmethod
     def from_hsv(h: float, s: float, v: float, a: float = 1.0) -> 'Color':
@@ -207,7 +210,11 @@ class Sphere:
                     intensity=0.0
                 ))
     
-    def get_point_at(self, theta: float, phi: float) -> Optional[SurfacePoint]:
+    def get_point_at(
+        self,
+        theta: float,
+        phi: float
+    ) -> Optional[SurfacePoint]:
         """Get the surface point closest to given spherical coordinates."""
         target = Point3D.from_spherical(self.radius, theta, phi)
         target = target + self.center
@@ -223,7 +230,12 @@ class Sphere:
         
         return closest
     
-    def set_point_color(self, index: int, color: Color, intensity: float = 1.0):
+    def set_point_color(
+        self,
+        index: int,
+        color: Color,
+        intensity: float = 1.0
+    ):
         """Set color and intensity of a surface point by index."""
         if 0 <= index < len(self.surface_points):
             self.surface_points[index].color = color

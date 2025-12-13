@@ -132,7 +132,9 @@ class BKGInterface:
                     "type": task.circuit_type,
                     "can_prepare": True,
                     "can_execute": False,  # BKG can't run terminal
-                    "suggested_action": "Prepare circuit file and documentation",
+                    "suggested_action": (
+                        "Prepare circuit file and documentation"
+                    ),
                 })
         
         return bkg_compatible

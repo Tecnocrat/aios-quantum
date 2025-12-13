@@ -49,7 +49,8 @@ class TopologyPattern:
     This is the bosonic layer - observable, measurable, local.
     """
     # Distribution type
-    distribution: str = "probability"  # probability, harmonic, spiral, clustered
+    # probability, harmonic, spiral, clustered
+    distribution: str = "probability"
     
     # Clustering parameters
     cluster_centers: List[Tuple[float, float]] = field(default_factory=list)
@@ -96,7 +97,9 @@ class TopologyPattern:
                 min_dist = min(min_dist, dist)
             
             # Gaussian falloff from cluster center
-            cluster_weight = math.exp(-min_dist**2 / (2 * self.cluster_strength**2))
+            cluster_weight = math.exp(
+                -min_dist**2 / (2 * self.cluster_strength**2)
+            )
             weight *= cluster_weight
         
         return weight
@@ -294,7 +297,9 @@ class MetaphysicalPattern:
         weight = 1.0
         decay = 1.0
         
-        for past_states in reversed(self.temporal_states[-self.temporal_depth:]):
+        for past_states in reversed(
+            self.temporal_states[-self.temporal_depth:]
+        ):
             if state in past_states:
                 weight += decay * past_states[state]
             decay *= self.temporal_decay
@@ -353,7 +358,9 @@ class QuantumEncodingPattern:
     """
     topology: TopologyPattern = field(default_factory=TopologyPattern)
     color: ColorPattern = field(default_factory=ColorPattern)
-    metaphysical: MetaphysicalPattern = field(default_factory=MetaphysicalPattern)
+    metaphysical: MetaphysicalPattern = field(
+        default_factory=MetaphysicalPattern
+    )
     
     # Layer weights (for blending)
     topology_weight: float = 1.0
@@ -419,7 +426,8 @@ class QuantumEncodingPattern:
         Update pattern state from a heartbeat result.
         """
         # Update coherence
-        self.metaphysical.coherence_value = heartbeat_result.coherence_estimate
+        coherence = heartbeat_result.coherence_estimate
+        self.metaphysical.coherence_value = coherence
         
         # Update temporal history
         total = sum(heartbeat_result.counts.values())
@@ -503,13 +511,16 @@ def create_entanglement_pattern() -> QuantumEncodingPattern:
             resonance_m=2,
             entangled_pairs=[
                 ((0.5, 0), (2.6, math.pi)),  # North-South
-                ((math.pi/2, 0), (math.pi/2, math.pi)),  # Equatorial opposites
+                # Equatorial opposites
+                ((math.pi/2, 0), (math.pi/2, math.pi)),
             ]
         )
     )
 
 
-def create_vision_pattern(vision_type: str = "wave") -> QuantumEncodingPattern:
+def create_vision_pattern(
+    vision_type: str = "wave"
+) -> QuantumEncodingPattern:
     """Pattern with active metaphysical vision overlay."""
     return QuantumEncodingPattern(
         topology=TopologyPattern(

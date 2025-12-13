@@ -109,8 +109,13 @@ class CardiogramSession:
             "vertices": vertices,
             "metadata": {
                 "start_time": self.start_time,
-                "end_time": self.points[-1].timestamp if self.points else None,
-                "mean_error": sum(p.error_rate for p in self.points) / len(self.points) if self.points else 0,
+                "end_time": (
+                    self.points[-1].timestamp if self.points else None
+                ),
+                "mean_error": (
+                    sum(p.error_rate for p in self.points) / len(self.points)
+                    if self.points else 0
+                ),
                 "error_variance": self._compute_variance(),
             }
         }
@@ -120,7 +125,10 @@ class CardiogramSession:
         if len(self.points) < 2:
             return 0.0
         mean = sum(p.error_rate for p in self.points) / len(self.points)
-        variance = sum((p.error_rate - mean) ** 2 for p in self.points) / len(self.points)
+        variance = (
+            sum((p.error_rate - mean) ** 2 for p in self.points)
+            / len(self.points)
+        )
         return variance
 
 
@@ -211,7 +219,10 @@ def analyze_cardiogram_result(
     )
 
 
-def create_multi_qubit_cardiogram(num_qubits: int = 5, num_flips: int = 5) -> QuantumCircuit:
+def create_multi_qubit_cardiogram(
+    num_qubits: int = 5,
+    num_flips: int = 5
+) -> QuantumCircuit:
     """
     Create a multi-qubit cardiogram for richer surface data.
     
@@ -225,7 +236,8 @@ def create_multi_qubit_cardiogram(num_qubits: int = 5, num_flips: int = 5) -> Qu
     Returns:
         QuantumCircuit with parallel cardiogram channels
     """
-    qc = QuantumCircuit(num_qubits, num_qubits, name=f"cardiogram_{num_qubits}q_{num_flips}f")
+    circuit_name = f"cardiogram_{num_qubits}q_{num_flips}f"
+    qc = QuantumCircuit(num_qubits, num_qubits, name=circuit_name)
     
     for q in range(num_qubits):
         for _ in range(num_flips):
@@ -284,9 +296,21 @@ def analyze_multi_qubit_result(
         "overall_fidelity": 1.0 - overall_error,
         "qubit_errors": qubit_errors,  # Per-qubit height data
         "mean_qubit_error": sum(qubit_errors) / len(qubit_errors),
-        "error_variance": sum((e - sum(qubit_errors)/len(qubit_errors))**2 for e in qubit_errors) / len(qubit_errors),
+        "error_variance": (
+            sum(
+                (e - sum(qubit_errors)/len(qubit_errors))**2
+                for e in qubit_errors
+            ) / len(qubit_errors)
+        ),
         "surface_data": {
-            "heights": [e * 20 - 1.0 for e in qubit_errors],  # Normalized heights
-            "roughness": sum((e - sum(qubit_errors)/len(qubit_errors))**2 for e in qubit_errors) / len(qubit_errors),
+            "heights": [
+                e * 20 - 1.0 for e in qubit_errors
+            ],  # Normalized heights
+            "roughness": (
+                sum(
+                    (e - sum(qubit_errors)/len(qubit_errors))**2
+                    for e in qubit_errors
+                ) / len(qubit_errors)
+            ),
         }
     }

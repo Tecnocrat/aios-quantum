@@ -101,7 +101,9 @@ class LayeredEncoder:
             )
         
         total = sum(counts.values())
-        sorted_states = sorted(counts.items(), key=lambda x: x[1], reverse=True)
+        sorted_states = sorted(
+            counts.items(), key=lambda x: x[1], reverse=True
+        )
         
         # Calculate probabilities
         probs = {state: count/total for state, count in counts.items()}
@@ -149,9 +151,12 @@ class LayeredEncoder:
         return LayeredEncodingResult(
             points_encoded=len(self.sphere.surface_points),
             topology_clusters=len(set(s for s, _ in sorted_states[:5])),
-            topology_spread=len(sorted_states) / 32,  # Normalized by max states
+            # Normalized by max states
+            topology_spread=len(sorted_states) / 32,
             color_diversity=len(hues_used) / 100,
-            dominant_hue=self.pattern.color.state_to_hue(sorted_states[0][0]),
+            dominant_hue=(
+                self.pattern.color.state_to_hue(sorted_states[0][0])
+            ),
             coherence_field=self.pattern.metaphysical.coherence_value,
             resonance_strength=self.pattern.metaphysical.resonance_amplitude,
             temporal_depth=len(self.pattern.metaphysical.temporal_states),
@@ -319,7 +324,8 @@ class LayeredEncoder:
             
             # Encode latest with temporal context
             latest = heartbeat_results[-1]
-            self.pattern.metaphysical.coherence_value = latest.coherence_estimate
+            coherence = latest.coherence_estimate
+            self.pattern.metaphysical.coherence_value = coherence
             return self.encode(latest.counts)
         
         else:

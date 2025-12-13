@@ -34,6 +34,8 @@ def load_cardiogram_data(results_dir: str) -> list:
 def load_heartbeat_data(results_dir: str) -> list:
     """Load real heartbeat data and extract error information."""
     data = []
+    
+    # Load real beat files
     for filepath in glob.glob(os.path.join(results_dir, "real_beat_*.json")):
         with open(filepath) as f:
             d = json.load(f)
@@ -60,14 +62,47 @@ def load_heartbeat_data(results_dir: str) -> list:
             
             data.append({
                 "timestamp": d.get("timestamp_utc", ""),
-                "backend": d.get("backend", "unknown"),
+                "backend": d.get("backend", "ibm_torino"),
                 "job_id": d.get("job_id", ""),
                 "qubit_errors": qubit_errors,
                 "num_qubits": num_qubits,
                 "source_file": os.path.basename(filepath),
-                "type": "heartbeat"
+                "type": "heartbeat_real"
             })
-    return data
+    
+    # Load simulator beat files (daily aggregates)
+    for filepath in glob.glob(os.path.join(results_dir, "beat_*.json")):
+        with open(filepath) as f:
+            d = json.load(f)
+            counts = d.get("counts", {})
+            total = sum(counts.values())
+            num_qubits = d.get("num_qubits", 5)
+            
+            # Calculate per-qubit deviation from coherent state
+            qubit_errors = []
+            for q in range(num_qubits):
+                ones_count = 0
+                for state, count in counts.items():
+                    if len(state) > q and state[-(q+1)] == "1":
+                        ones_count += count
+                # For simulator, deviation from coherent state
+                # High coherence = low error
+                bias = abs(0.5 - (ones_count / total)) if total > 0 else 0
+                qubit_errors.append(bias)
+            
+            data.append({
+                "timestamp": d.get("timestamp_utc", ""),
+                "backend": d.get("backend_name", "statevector_sampler"),
+                "job_id": d.get("job_id", "simulator"),
+                "qubit_errors": qubit_errors,
+                "num_qubits": num_qubits,
+                "source_file": os.path.basename(filepath),
+                "type": "heartbeat_sim",
+                "coherence": d.get("coherence_estimate", 0),
+                "entropy": d.get("entropy", 0)
+            })
+    
+    return sorted(data, key=lambda x: x.get("timestamp", ""))
 
 
 def build_combined_surface(cardiograms: list, heartbeats: list) -> dict:

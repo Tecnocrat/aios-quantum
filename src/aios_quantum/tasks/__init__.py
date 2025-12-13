@@ -16,8 +16,16 @@ from .task_queue import (
     create_consciousness_task,
     create_custom_task,
 )
-from .bkg_interface import BKGInterface, issue_task_to_bkg, check_bkg_status
-from .executor import IBMQuantumExecutor, execute_task_on_ibm, test_ibm_connection
+from .bkg_interface import (
+    BKGInterface,
+    issue_task_to_bkg,
+    check_bkg_status
+)
+from .executor import (
+    IBMQuantumExecutor,
+    execute_task_on_ibm,
+    test_ibm_connection
+)
 
 __all__ = [
     # Task Queue

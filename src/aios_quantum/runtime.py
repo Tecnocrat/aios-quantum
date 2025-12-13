@@ -40,7 +40,11 @@ class QuantumRuntime:
             )
         return self._service
     
-    def get_backends(self, operational: bool = True, simulator: bool = False) -> List[str]:
+    def get_backends(
+        self,
+        operational: bool = True,
+        simulator: bool = False
+    ) -> List[str]:
         """
         Get list of available backends.
         

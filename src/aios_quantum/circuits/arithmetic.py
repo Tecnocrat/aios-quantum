@@ -31,7 +31,8 @@ class ArithmeticResult:
     measured: Dict[str, int]  # All measurement outcomes
     most_likely: int
     accuracy: float  # How often we got the right answer
-    error_distribution: Dict[int, float]  # Wrong answers and their frequencies
+    # Wrong answers and their frequencies
+    error_distribution: Dict[int, float]
     circuit_depth: int
     backend: str
     coherence_score: float  # Derived metric
@@ -53,14 +54,18 @@ class ArithmeticResult:
         }
 
 
-def create_increment_circuit(n_bits: int = 3, value: int = 0) -> QuantumCircuit:
+def create_increment_circuit(
+    n_bits: int = 3,
+    value: int = 0
+) -> QuantumCircuit:
     """
     Create a circuit that increments a quantum register by 1.
     
     This is COUNTING: value → value + 1
     
     Implementation: Ripple-carry increment (correct version)
-    Key insight: We need to flip from MSB down, checking if lower bits will carry.
+    Key insight: We need to flip from MSB down, checking if lower
+    bits will carry.
     
     Algorithm:
     - For n bits, we apply controlled-X gates from MSB to LSB
@@ -108,7 +113,11 @@ def create_increment_circuit(n_bits: int = 3, value: int = 0) -> QuantumCircuit:
     return qc
 
 
-def create_addition_circuit(n_bits: int = 3, a: int = 1, b: int = 1) -> QuantumCircuit:
+def create_addition_circuit(
+    n_bits: int = 3,
+    a: int = 1,
+    b: int = 1
+) -> QuantumCircuit:
     """
     Create a circuit that computes a + b.
     
@@ -149,7 +158,10 @@ def create_addition_circuit(n_bits: int = 3, a: int = 1, b: int = 1) -> QuantumC
     return qc
 
 
-def create_multiply_by_2_circuit(n_bits: int = 4, value: int = 3) -> QuantumCircuit:
+def create_multiply_by_2_circuit(
+    n_bits: int = 4,
+    value: int = 3
+) -> QuantumCircuit:
     """
     Create a circuit that computes value * 2.
     
@@ -230,7 +242,8 @@ def analyze_arithmetic_result(
     elif accuracy > 0.9:
         coherence = 0.9 + (accuracy - 0.9)
     else:
-        # Factor in error spread - concentrated errors = systematic, spread = decoherence
+        # Factor in error spread
+        # concentrated errors = systematic, spread = decoherence
         error_entropy = 0.0
         for prob in error_dist.values():
             if prob > 0:
@@ -254,7 +267,10 @@ def analyze_arithmetic_result(
     )
 
 
-def create_counting_sequence(max_value: int = 7, n_bits: int = 3) -> List[QuantumCircuit]:
+def create_counting_sequence(
+    max_value: int = 7,
+    n_bits: int = 3
+) -> List[QuantumCircuit]:
     """
     Create a sequence of circuits that count: 0, 1, 2, 3, ...
     
@@ -274,7 +290,10 @@ def create_counting_sequence(max_value: int = 7, n_bits: int = 3) -> List[Quantu
     return circuits
 
 
-def create_fibonacci_test(n_steps: int = 5, n_bits: int = 4) -> List[Dict[str, Any]]:
+def create_fibonacci_test(
+    n_steps: int = 5,
+    n_bits: int = 4
+) -> List[Dict[str, Any]]:
     """
     Create Fibonacci sequence test.
     
@@ -402,7 +421,10 @@ def analyze_qubit_coherence(
     # Trend analysis
     if len(errors) >= 3:
         recent_avg = sum(errors[-3:]) / 3
-        older_avg = sum(errors[:-3]) / max(len(errors) - 3, 1) if len(errors) > 3 else recent_avg
+        if len(errors) > 3:
+            older_avg = sum(errors[:-3]) / max(len(errors) - 3, 1)
+        else:
+            older_avg = recent_avg
         if recent_avg < older_avg * 0.9:
             trend = "improving"
         elif recent_avg > older_avg * 1.1:
@@ -459,8 +481,14 @@ def create_coherence_map(
             "entropy_qubits": [p.qubit_index for p in entropy],
         },
         "summary": {
-            "best_qubit": min(profiles, key=lambda p: p.recent_error_rate).qubit_index,
-            "worst_qubit": max(profiles, key=lambda p: p.recent_error_rate).qubit_index,
-            "mean_error": sum(p.recent_error_rate for p in profiles) / len(profiles),
+            "best_qubit": min(
+                profiles, key=lambda p: p.recent_error_rate
+            ).qubit_index,
+            "worst_qubit": max(
+                profiles, key=lambda p: p.recent_error_rate
+            ).qubit_index,
+            "mean_error": (
+                sum(p.recent_error_rate for p in profiles) / len(profiles)
+            ),
         },
     }

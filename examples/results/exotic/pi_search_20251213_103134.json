@@ -1,0 +1,26 @@
+{
+  "experiment_type": "pi_search",
+  "id": "pi_search_2025-12-13T10-31-34.594408",
+  "counts": {
+    "1111": 172,
+    "0000": 32,
+    "0101": 19,
+    "1011": 112,
+    "1110": 158,
+    "0011": 179,
+    "0100": 104,
+    "1001": 72,
+    "1100": 133,
+    "0001": 39
+  },
+  "timestamp": "2025-12-13T10:31:34.594408",
+  "n_qubits": 4,
+  "n_shots": 1024,
+  "circuit_depth": 12,
+  "backend": "mock_simulator",
+  "coherence": 0.17549019607843136,
+  "entropy": 3.0731614021287297,
+  "target_value": 3.14159,
+  "found_value": 3,
+  "success_probability": 0.17549019607843136
+}

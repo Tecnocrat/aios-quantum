@@ -226,7 +226,9 @@ class QuantumHeartbeat:
         normalized_entropy = entropy / max_entropy if max_entropy > 0 else 0
         
         # Top states: Most frequently measured
-        sorted_counts = sorted(counts.items(), key=lambda x: x[1], reverse=True)
+        sorted_counts = sorted(
+            counts.items(), key=lambda x: x[1], reverse=True
+        )
         top_states = [
             {"state": state, "count": count, "probability": count/total_shots}
             for state, count in sorted_counts[:5]
@@ -319,7 +321,9 @@ class QuantumHeartbeat:
                 entropy=metrics["entropy"],
                 top_states=metrics["top_states"],
                 budget_used_total=self.budget_used,
-                budget_remaining=self.config.max_monthly_seconds - self.budget_used
+                budget_remaining=(
+                    self.config.max_monthly_seconds - self.budget_used
+                )
             )
             
             # Save result
@@ -340,7 +344,8 @@ class QuantumHeartbeat:
     
     def _save_result(self, result: HeartbeatResult):
         """Save heartbeat result to disk."""
-        filename = f"beat_{result.beat_number:06d}_{result.timestamp_utc[:10]}.json"
+        timestamp_date = result.timestamp_utc[:10]
+        filename = f"beat_{result.beat_number:06d}_{timestamp_date}.json"
         filepath = self.results_path / filename
         
         with open(filepath, 'w') as f:
@@ -383,8 +388,9 @@ class QuantumHeartbeat:
                     break
                 
                 # Sleep until next beat
-                logger.info(f"Sleeping for {self.config.interval_seconds}s...")
-                time.sleep(self.config.interval_seconds)
+                sleep_time = self.config.interval_seconds
+                logger.info(f"Sleeping for {sleep_time}s...")
+                time.sleep(sleep_time)
                 
         except KeyboardInterrupt:
             logger.info("Heartbeat stopped by user")

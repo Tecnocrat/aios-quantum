@@ -1,0 +1,26 @@
+{
+  "experiment_type": "entanglement",
+  "id": "entanglement_2025-12-13T10-31-34.594791",
+  "counts": {
+    "0010": 61,
+    "1000": 132,
+    "1100": 7,
+    "1001": 142,
+    "1101": 39,
+    "1010": 92,
+    "0100": 133,
+    "0001": 148,
+    "0011": 145,
+    "0000": 122
+  },
+  "timestamp": "2025-12-13T10:31:34.594791",
+  "n_qubits": 4,
+  "n_shots": 1024,
+  "circuit_depth": 12,
+  "backend": "mock_simulator",
+  "coherence": 0.14495592556317335,
+  "entropy": 3.1154171033428617,
+  "target_value": "witness",
+  "found_value": 1,
+  "success_probability": 0.14495592556317335
+}

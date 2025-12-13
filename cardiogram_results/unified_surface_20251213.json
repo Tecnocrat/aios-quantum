@@ -1,0 +1,488 @@
+{
+  "vertices": [
+    {
+      "id": "cardiogram_real_2025-12-12_204822",
+      "position": [
+        0.11559686427781772,
+        0.0,
+        0.81125
+      ],
+      "color": [
+        0.0,
+        0.176,
+        0.2,
+        1.0
+      ],
+      "spherical": {
+        "theta": 0.1415394733244273,
+        "phi": 0.0,
+        "depth": 0.2
+      },
+      "metadata": {
+        "class": "cardiogram",
+        "origin": "ibm_quantum",
+        "timestamp": "2025-12-12T19:48:22.163283+00:00",
+        "backend": "ibm_fez",
+        "coherence": 0.0,
+        "entropy": 0.0,
+        "n_qubits": 5
+      },
+      "connections": []
+    },
+    {
+      "id": "cardiogram_real_2025-12-12_205642",
+      "position": [
+        -0.09649324123929115,
+        -0.2974417970411422,
+        -0.07390275651856376
+      ],
+      "color": [
+        0.0,
+        0.176,
+        0.2,
+        1.0
+      ],
+      "spherical": {
+        "theta": 1.8028740096576097,
+        "phi": 236.8765467245069,
+        "depth": 1.908
+      },
+      "metadata": {
+        "class": "cardiogram",
+        "origin": "ibm_quantum",
+        "timestamp": "2025-12-12T19:56:42.795811+00:00",
+        "backend": "ibm_fez",
+        "coherence": 0.0,
+        "entropy": 0.0,
+        "n_qubits": 5
+      },
+      "connections": []
+    },
+    {
+      "id": "cardiogram_real_2025-12-12_205736",
+      "position": [
+        0.09631289232695579,
+        0.42812046268246956,
+        0.27426348454976224
+      ],
+      "color": [
+        0.0,
+        0.176,
+        0.2,
+        1.0
+      ],
+      "spherical": {
+        "theta": 1.0121957614520958,
+        "phi": 89.31410778137145,
+        "depth": 0.8440000000000001
+      },
+      "metadata": {
+        "class": "cardiogram",
+        "origin": "ibm_quantum",
+        "timestamp": "2025-12-12T19:57:36.955399+00:00",
+        "backend": "ibm_fez",
+        "coherence": 0.0,
+        "entropy": 0.0,
+        "n_qubits": 5
+      },
+      "connections": []
+    },
+    {
+      "id": "hypersphere_surface_2025-12-12_205830",
+      "position": [
+        -0.17864503450302863,
+        -0.03745125351714012,
+        -0.18403139727224496
+      ],
+      "color": [
+        0.0,
+        0.176,
+        0.2,
+        1.0
+      ],
+      "spherical": {
+        "theta": 2.3602945361410685,
+        "phi": 330.0738765833293,
+        "depth": 2.58
+      },
+      "metadata": {
+        "class": "cardiogram",
+        "origin": "ibm_quantum",
+        "timestamp": "hypersphere_surface_2025-12-12_205830",
+        "backend": "unknown",
+        "coherence": 0.0,
+        "entropy": 0.0,
+        "n_qubits": 0
+      },
+      "connections": []
+    },
+    {
+      "id": "hypersphere_surface_2025-12-13_102255",
+      "position": [
+        0.3564823793085191,
+        0.10990732757099926,
+        0.01867539006321392
+      ],
+      "color": [
+        0.0,
+        0.176,
+        0.2,
+        1.0
+      ],
+      "spherical": {
+        "theta": 1.5207754699891265,
+        "phi": 182.51143764019386,
+        "depth": 1.5159999999999998
+      },
+      "metadata": {
+        "class": "cardiogram",
+        "origin": "ibm_quantum",
+        "timestamp": "hypersphere_surface_2025-12-13_102255",
+        "backend": "unknown",
+        "coherence": 0.0,
+        "entropy": 0.0,
+        "n_qubits": 0
+      },
+      "connections": []
+    },
+    {
+      "id": "hypersphere_surface_2025-12-13_102334",
+      "position": [
+        -0.36170088591859023,
+        -0.14930486770547244,
+        0.5404856225667646
+      ],
+      "color": [
+        0.0,
+        0.176,
+        0.2,
+        1.0
+      ],
+      "spherical": {
+        "theta": 0.6266442116407406,
+        "phi": 34.94899869705839,
+        "depth": 0.452
+      },
+      "metadata": {
+        "class": "cardiogram",
+        "origin": "ibm_quantum",
+        "timestamp": "hypersphere_surface_2025-12-13_102334",
+        "backend": "unknown",
+        "coherence": 0.0,
+        "entropy": 0.0,
+        "n_qubits": 0
+      },
+      "connections": []
+    },
+    {
+      "id": "surface_real_2025-12-12_204822",
+      "position": [
+        -0.020894601679327808,
+        0.2680921910156062,
+        -0.1208780644127544
+      ],
+      "color": [
+        0.0,
+        0.176,
+        0.2,
+        1.0
+      ],
+      "spherical": {
+        "theta": 1.9932503889816524,
+        "phi": 271.82554542156527,
+        "depth": 2.1599999999999997
+      },
+      "metadata": {
+        "class": "cardiogram",
+        "origin": "ibm_quantum",
+        "timestamp": "surface_real_2025-12-12_204822",
+        "backend": "unknown",
+        "coherence": 0.0,
+        "entropy": 0.0,
+        "n_qubits": 0
+      },
+      "connections": []
+    },
+    {
+      "id": "surface_real_2025-12-12_205642",
+      "position": [
+        0.07173977778648291,
+        -0.4174332366391533,
+        0.15825308839811206
+      ],
+      "color": [
+        0.0,
+        0.176,
+        0.2,
+        1.0
+      ],
+      "spherical": {
+        "theta": 1.2132252231493863,
+        "phi": 124.26310647842985,
+        "depth": 1.0959999999999999
+      },
+      "metadata": {
+        "class": "cardiogram",
+        "origin": "ibm_quantum",
+        "timestamp": "surface_real_2025-12-12_205642",
+        "backend": "unknown",
+        "coherence": 0.0,
+        "entropy": 0.0,
+        "n_qubits": 0
+      },
+      "connections": []
+    },
+    {
+      "id": "surface_real_2025-12-12_205736",
+      "position": [
+        0.09106334513262553,
+        0.062049776451007,
+        -0.21509015389577277
+      ],
+      "color": [
+        0.0,
+        0.176,
+        0.2,
+        1.0
+      ],
+      "spherical": {
+        "theta": 2.668141496317727,
+        "phi": 365.0228752803877,
+        "depth": 2.832
+      },
+      "metadata": {
+        "class": "cardiogram",
+        "origin": "ibm_quantum",
+        "timestamp": "surface_real_2025-12-12_205736",
+        "backend": "unknown",
+        "coherence": 0.0,
+        "entropy": 0.0,
+        "n_qubits": 0
+      },
+      "connections": []
+    },
+    {
+      "id": "pi_search_2025-12-13T10-31-34.594408",
+      "position": [
+        -0.8559252046876552,
+        1.04820606223028e-16,
+        -0.47582183171715386
+      ],
+      "color": [
+        0.3403921568627451,
+        0.22443828442756744,
+        0.1464512053281111,
+        0.692683859787127
+      ],
+      "spherical": {
+        "theta": 2.0781696121971174,
+        "phi": 3.141592653589793,
+        "depth": 0.019219484206386188
+      },
+      "metadata": {
+        "class": "pi_search",
+        "origin": "simulator",
+        "timestamp": "2025-12-13T10:31:34.603173",
+        "backend": "unknown",
+        "coherence": 0.17549019607843136,
+        "entropy": 3.0731614021287297,
+        "n_qubits": 0
+      },
+      "connections": []
+    },
+    {
+      "id": "arithmetic_2025-12-13T10-31-34.594627",
+      "position": [
+        0.22471209646056553,
+        0.0,
+        0.23135232708054526
+      ],
+      "color": [
+        0.2003297408965625,
+        0.335735294117647,
+        0.16759107171016446,
+        0.7008237899127822
+      ],
+      "spherical": {
+        "theta": 0.7708393398680365,
+        "phi": 0.0,
+        "depth": 1.8975286302616534
+      },
+      "metadata": {
+        "class": "arithmetic",
+        "origin": "simulator",
+        "timestamp": "2025-12-13T10:31:34.603236",
+        "backend": "unknown",
+        "coherence": 0.2088235294117647,
+        "entropy": 2.991762100872178,
+        "n_qubits": 0
+      },
+      "connections": []
+    },
+    {
+      "id": "entanglement_2025-12-13T10-31-34.594791",
+      "position": [
+        0.10177938414948061,
+        0.0,
+        0.8180080850517599
+      ],
+      "color": [
+        0.15098465237971176,
+        0.1378106739034055,
+        0.3159647404505387,
+        0.6884582896657139
+      ],
+      "spherical": {
+        "theta": 0.12378726960258596,
+        "phi": 0.0,
+        "depth": 0.19346251310028584
+      },
+      "metadata": {
+        "class": "entanglement",
+        "origin": "simulator",
+        "timestamp": "2025-12-13T10:31:34.603269",
+        "backend": "unknown",
+        "coherence": 0.14495592556317335,
+        "entropy": 3.1154171033428617,
+        "n_qubits": 0
+      },
+      "connections": []
+    },
+    {
+      "id": "golden_ratio_2025-12-13T10-31-34.594903",
+      "position": [
+        0.11812363263778289,
+        0.0,
+        0.9692493814019307
+      ],
+      "color": [
+        0.2757396449704142,
+        0.21191935032350478,
+        0.15375785583528992,
+        0.6017002201691601
+      ],
+      "spherical": {
+        "theta": 0.12127320113507817,
+        "phi": 0.0,
+        "depth": 0.0219489933949252
+      },
+      "metadata": {
+        "class": "golden",
+        "origin": "simulator",
+        "timestamp": "2025-12-13T10:31:34.603293",
+        "backend": "unknown",
+        "coherence": 0.09467455621301775,
+        "entropy": 3.982997798308399,
+        "n_qubits": 0
+      },
+      "connections": []
+    },
+    {
+      "id": "random_2025-12-13T10-31-34.595055",
+      "position": [
+        0.00934946484711808,
+        0.0,
+        -0.4310525473420863
+      ],
+      "color": [
+        0.233135509396637,
+        0.2169059573181649,
+        0.15386943620178042,
+        0.55
+      ],
+      "spherical": {
+        "theta": -3.1632791026501295,
+        "phi": 0.0,
+        "depth": 1.1931749490753654
+      },
+      "metadata": {
+        "class": "random",
+        "origin": "simulator",
+        "timestamp": "2025-12-13T10:31:34.603310",
+        "backend": "unknown",
+        "coherence": 0.06627101879327399,
+        "entropy": 4.621166327169103,
+        "n_qubits": 0
+      },
+      "connections": []
+    },
+    {
+      "id": "bell_2025-12-13T10-31-34.595204",
+      "position": [
+        -0.06261076408279927,
+        -0.1929985763119301,
+        -0.05266346592524221
+      ],
+      "color": [
+        0.9499511241446725,
+        0.044889009042709614,
+        0.9273909247946233,
+        0.966247128854635
+      ],
+      "spherical": {
+        "theta": 1.8247459549166518,
+        "phi": 236.8765467245069,
+        "depth": 3.4017878569040976
+      },
+      "metadata": {
+        "class": "entanglement",
+        "origin": "simulator",
+        "timestamp": "2025-12-13T10:31:34.603328",
+        "backend": "unknown",
+        "coherence": 0.9374389051808406,
+        "entropy": 0.3375287114536499,
+        "n_qubits": 0
+      },
+      "connections": []
+    },
+    {
+      "id": "ghz_2025-12-13T10-31-34.595314",
+      "position": [
+        0.06113840513621214,
+        0.2717663405406603,
+        0.17601195950457516
+      ],
+      "color": [
+        0.2739633997576498,
+        0.12118495341570343,
+        0.5212536728697356,
+        0.8339375135053508
+      ],
+      "spherical": {
+        "theta": 1.0072741160064542,
+        "phi": 89.31410778137145,
+        "depth": 1.838276012786804
+      },
+      "metadata": {
+        "class": "entanglement",
+        "origin": "simulator",
+        "timestamp": "2025-12-13T10:31:34.603343",
+        "backend": "unknown",
+        "coherence": 0.4015670910871694,
+        "entropy": 1.6606248649464914,
+        "n_qubits": 0
+      },
+      "connections": []
+    }
+  ],
+  "edges": [],
+  "statistics": {
+    "total": 16,
+    "by_class": {
+      "cardiogram": 9,
+      "pi_search": 1,
+      "arithmetic": 1,
+      "entanglement": 3,
+      "golden": 1,
+      "random": 1
+    },
+    "by_origin": {
+      "ibm_quantum": 9,
+      "simulator": 7
+    }
+  },
+  "generated_at": "2025-12-13T10:31:34.603648",
+  "version": "2.0-unified",
+  "vertex_count": 16,
+  "edge_count": 0
+}

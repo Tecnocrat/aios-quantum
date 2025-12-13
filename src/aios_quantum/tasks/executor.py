@@ -151,7 +151,9 @@ class IBMQuantumExecutor:
     def _build_from_params(self, params: Dict[str, Any]) -> QuantumCircuit:
         """Build circuit from parameter dict."""
         # This would be expanded for full custom circuit support
-        raise NotImplementedError("Custom circuit building not yet implemented")
+        raise NotImplementedError(
+            "Custom circuit building not yet implemented"
+        )
     
     def execute(self, task: QuantumTask) -> Tuple[Dict[str, Any], float]:
         """
@@ -170,10 +172,15 @@ class IBMQuantumExecutor:
         
         # Get backend
         backend = self.get_backend(task.backend_preference)
-        backend_name = backend.name if hasattr(backend, 'name') else str(type(backend).__name__)
+        backend_name = (
+            backend.name if hasattr(backend, 'name')
+            else str(type(backend).__name__)
+        )
         
         # Transpile for backend
-        pm = generate_preset_pass_manager(backend=backend, optimization_level=1)
+        pm = generate_preset_pass_manager(
+            backend=backend, optimization_level=1
+        )
         transpiled = pm.run(circuit)
         
         # Execute
@@ -208,7 +215,11 @@ class IBMQuantumExecutor:
         
         return result_data, qpu_time
     
-    def _analyze_results(self, counts: Dict[str, int], circuit_type: str) -> Dict[str, Any]:
+    def _analyze_results(
+        self,
+        counts: Dict[str, int],
+        circuit_type: str
+    ) -> Dict[str, Any]:
         """Analyze execution results."""
         total = sum(counts.values())
         
@@ -228,7 +239,9 @@ class IBMQuantumExecutor:
                 n_qubits = len(list(counts.keys())[0])
                 all_zeros = "0" * n_qubits
                 all_ones = "1" * n_qubits
-                correlated = counts.get(all_zeros, 0) + counts.get(all_ones, 0)
+                correlated = (
+                    counts.get(all_zeros, 0) + counts.get(all_ones, 0)
+                )
                 fidelity = correlated / total
                 return {
                     "expected_states": [all_zeros, all_ones],
@@ -240,13 +253,17 @@ class IBMQuantumExecutor:
             # Consciousness circuit - analyze entropy and correlation
             # This is the AIOS-specific analysis
             probabilities = {k: v / total for k, v in counts.items()}
-            entropy = -sum(p * (p.bit_length() - 1 if p > 0 else 0) 
-                          for p in probabilities.values() if p > 0)
+            entropy = -sum(
+                p * (p.bit_length() - 1 if p > 0 else 0)
+                for p in probabilities.values() if p > 0
+            )
             return {
                 "unique_states": len(counts),
                 "entropy_estimate": entropy,
                 "coherence_metric": len(counts) / total,
-                "consciousness_signature": self._compute_consciousness_signature(counts),
+                "consciousness_signature": (
+                    self._compute_consciousness_signature(counts)
+                ),
             }
         
         return {"raw_counts": counts}
