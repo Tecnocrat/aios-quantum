@@ -4,6 +4,10 @@
 **Last Updated:** December 13, 2025  
 **Status:** ✅ FULLY CONFIGURED AND TESTED
 
+> ⚠️ **SECURITY NOTE**: All API keys and secrets have been removed from this file.
+> See [SECRETS_PROTECTION.md](./SECRETS_PROTECTION.md) for the secure secrets management pattern.
+> Actual credentials are stored in your local `.env` file (gitignored).
+
 ---
 
 ## Account Information
@@ -11,8 +15,8 @@
 | Property | Value |
 |----------|-------|
 | **Account Name** | Tecnocrat |
-| **Account ID** | `0eb4566b0a4640a3a59769e5d10a25d3` |
-| **User** | jesussard@gmail.com |
+| **Account ID** | `<see .env: IBM_CLOUD_ACCOUNT_ID>` |
+| **User** | `<your IBM Cloud email>` |
 | **Resource Group** | Default |
 
 ---
@@ -24,7 +28,7 @@
 | **Version** | 2.40.0 |
 | **Install Path** | `C:\Program Files\IBM\Cloud\bin\ibmcloud.exe` |
 | **Install Date** | December 13, 2025 |
-| **Config Path** | `C:\Users\jesus\.bluemix\` |
+| **Config Path** | `C:\Users\<user>\.bluemix\` |
 
 ### Quick Commands
 ```powershell
@@ -52,14 +56,14 @@ ibmcloud resource service-instances
 | **Plan** | Lite (Free) |
 | **Location** | Global |
 | **Created** | December 9, 2025 |
-| **Instance CRN** | `crn:v1:bluemix:public:cloud-object-storage:global:a/0eb4566b0a4640a3a59769e5d10a25d3:b0bb0704-eefc-4b49-bdeb-bf14b2aaf189::` |
+| **Instance CRN** | `<see .env: COS_INSTANCE_ID>` |
 
 ### Credentials
 | Property | Value |
 |----------|-------|
 | **Credential Name** | cos-aios-key |
 | **Role** | Manager |
-| **API Key** | `Gp4CuMx_1Yf5T9riqivzpA84pXIdo-vzOrd9J536ZhPo` |
+| **API Key** | `<see .env: COS_API_KEY>` |
 
 ### Buckets
 | Bucket Name | Purpose | Region |
@@ -95,19 +99,19 @@ ibmcloud cos upload --bucket aios-quantum-experiments --key raw/test.json --file
 | **Plan** | Lite (Free: 1 GB, 20 reads/sec) |
 | **Location** | us-south |
 | **Created** | December 13, 2025 |
-| **Instance GUID** | `d119da9c-3fcc-4622-8626-ab634b68d490` |
+| **Instance GUID** | `<see IBM Cloud Console>` |
 
 ### Credentials
 | Property | Value |
 |----------|-------|
 | **Credential Name** | cloudant-aios-key |
 | **Role** | Manager |
-| **API Key** | `4968opk2dXdmpjH-tRV0Vatsik5e-45_Kqgv3e0q-Jf4` |
-| **Host** | `c8de5391-a794-410b-b35a-27c03909ea07-bluemix.cloudantnosqldb.appdomain.cloud` |
+| **API Key** | `<see .env: CLOUDANT_API_KEY>` |
+| **Host** | `<see .env: CLOUDANT_HOST>` |
 
 ### URL
 ```
-https://c8de5391-a794-410b-b35a-27c03909ea07-bluemix.cloudantnosqldb.appdomain.cloud
+<see .env: CLOUDANT_URL>
 ```
 
 ### Database
@@ -134,7 +138,7 @@ ibmcloud resource service-key cloudant-aios-key
 | **Service Name** | open-instance (Qiskit Runtime) |
 | **Plan** | Open Plan (free tier) |
 | **Location** | us-east |
-| **Instance CRN** | `crn:v1:bluemix:public:quantum-computing:us-east:a/0eb4566b0a4640a3a59769e5d10a25d3:1acc9085-376e-430c-98ef-3d0753ad1fe6::` |
+| **Instance CRN** | `<see .env: IBM_QUANTUM_INSTANCE>` |
 
 ### Available Backends
 | Backend | Qubits | Status |
@@ -146,34 +150,39 @@ ibmcloud resource service-key cloudant-aios-key
 
 ### Authentication Token
 ```
-IBM_QUANTUM_TOKEN=Th5QSXWUZ-QMgaUw8ZJuTPEtQS270jlZSs_pkkggToCp
+<see .env: IBM_QUANTUM_TOKEN>
 ```
 
 ---
 
-## Environment Variables (.env)
+## Environment Variables Template
+
+Copy this to your `.env` file and fill in your actual credentials:
 
 ```bash
 # ===== IBM Quantum Configuration =====
-IBM_QUANTUM_TOKEN=Th5QSXWUZ-QMgaUw8ZJuTPEtQS270jlZSs_pkkggToCp
-IBM_QUANTUM_INSTANCE=crn:v1:bluemix:public:quantum-computing:us-east:a/0eb4566b0a4640a3a59769e5d10a25d3:1acc9085-376e-430c-98ef-3d0753ad1fe6::
+# Get from: https://quantum.cloud.ibm.com/ → Account settings → API token
+IBM_QUANTUM_TOKEN=your_ibm_quantum_token_here
+IBM_QUANTUM_INSTANCE=crn:v1:bluemix:public:quantum-computing:us-east:a/<account_id>:<instance_id>::
 IBM_QUANTUM_CHANNEL=ibm_cloud
 
 # ===== IBM Cloud Object Storage =====
-IBM_CLOUD_API_KEY=Gp4CuMx_1Yf5T9riqivzpA84pXIdo-vzOrd9J536ZhPo
-COS_API_KEY=Gp4CuMx_1Yf5T9riqivzpA84pXIdo-vzOrd9J536ZhPo
-COS_INSTANCE_ID=crn:v1:bluemix:public:cloud-object-storage:global:a/0eb4566b0a4640a3a59769e5d10a25d3:b0bb0704-eefc-4b49-bdeb-bf14b2aaf189::
+# Get from: IBM Cloud Console → COS instance → Service credentials
+IBM_CLOUD_API_KEY=your_ibm_cloud_api_key_here
+COS_API_KEY=your_cos_api_key_here
+COS_INSTANCE_ID=crn:v1:bluemix:public:cloud-object-storage:global:a/<account_id>:<instance_id>::
 COS_ENDPOINT=https://s3.us-east.cloud-object-storage.appdomain.cloud
 COS_BUCKET_EXPERIMENTS=aios-quantum-experiments
 COS_BUCKET_RESULTS=aios-quantum-results
 COS_BUCKET_NAME=aios-quantum-experiments
 
 # ===== IBM Cloudant NoSQL Database =====
-CLOUDANT_API_KEY=4968opk2dXdmpjH-tRV0Vatsik5e-45_Kqgv3e0q-Jf4
-CLOUDANT_HOST=c8de5391-a794-410b-b35a-27c03909ea07-bluemix.cloudantnosqldb.appdomain.cloud
-CLOUDANT_URL=https://c8de5391-a794-410b-b35a-27c03909ea07-bluemix.cloudantnosqldb.appdomain.cloud
-CLOUDANT_USERNAME=apikey-v2-1n5hz0r8my3gblej1ol18tf96gsgda0axrvok5t1h14i
-CLOUDANT_PASSWORD=a125cd70d1dbdc6c1a5e1dcab90bedd0
+# Get from: IBM Cloud Console → Cloudant instance → Service credentials
+CLOUDANT_API_KEY=your_cloudant_api_key_here
+CLOUDANT_HOST=<instance_id>-bluemix.cloudantnosqldb.appdomain.cloud
+CLOUDANT_URL=https://<instance_id>-bluemix.cloudantnosqldb.appdomain.cloud
+CLOUDANT_USERNAME=apikey-v2-<your_username>
+CLOUDANT_PASSWORD=your_cloudant_password_here
 CLOUDANT_DATABASE=quantum_topology
 ```
 
@@ -272,3 +281,15 @@ python examples/test_cloud_upload.py
 - **IBM Cloud Docs:** https://cloud.ibm.com/docs
 - **IBM Quantum Docs:** https://docs.quantum.ibm.com
 - **Qiskit Documentation:** https://qiskit.org/documentation
+
+---
+
+## Security Checklist
+
+- [ ] **Rotate all exposed keys** in IBM Cloud Console
+- [ ] **Never commit** `.env` files to git
+- [ ] **Use `.env.example`** as template (no real values)
+- [ ] **Enable** git pre-commit hooks for secret scanning
+- [ ] **Review** git history for any other exposures
+
+See [SECRETS_PROTECTION.md](./SECRETS_PROTECTION.md) for complete security protocol.

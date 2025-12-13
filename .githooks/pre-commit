@@ -1,0 +1,150 @@
+#!/bin/bash
+# AIOS Quantum Secret Detection Pre-Commit Hook
+# AINLP.security[MEMBRANE-VALIDATOR]
+#
+# This hook prevents accidental commits of secrets/API keys
+# Install: git config core.hooksPath .githooks
+
+echo "🔍 Scanning for secrets..."
+
+# High-entropy strings that look like API keys (40+ chars of alphanumeric)
+# Excludes common safe patterns
+DANGEROUS_PATTERNS=(
+    # IBM Cloud API keys (44 chars)
+    '[A-Za-z0-9_-]{40,50}'
+    # Passwords in assignments
+    'password\s*[:=]\s*["\x27][^"\x27]{8,}["\x27]'
+    'PASSWORD\s*[:=]\s*["\x27][^"\x27]{8,}["\x27]'
+    # API keys in assignments
+    'api_key\s*[:=]\s*["\x27][^"\x27]{20,}["\x27]'
+    'API_KEY\s*[:=]\s*["\x27][^"\x27]{20,}["\x27]'
+    'apikey\s*[:=]\s*["\x27][^"\x27]{20,}["\x27]'
+    # Tokens
+    'token\s*[:=]\s*["\x27][^"\x27]{20,}["\x27]'
+    'TOKEN\s*[:=]\s*["\x27][^"\x27]{20,}["\x27]'
+    # Secrets
+    'secret\s*[:=]\s*["\x27][^"\x27]{20,}["\x27]'
+    'SECRET\s*[:=]\s*["\x27][^"\x27]{20,}["\x27]'
+)
+
+# Patterns that indicate placeholder/safe values
+SAFE_INDICATORS=(
+    'your_.*_here'
+    'your-.*-here'
+    '<.*>'
+    'placeholder'
+    'example'
+    'EXAMPLE'
+    'xxx'
+    'XXX'
+    'CHANGEME'
+    'INSERT_'
+    'REPLACE_'
+    'TODO'
+)
+
+# Files to always skip
+SKIP_FILES=(
+    '.env.example'
+    'SECRETS_PROTECTION.md'
+    '*.png'
+    '*.jpg'
+    '*.gif'
+    '*.ico'
+    '*.woff'
+    '*.woff2'
+    '*.ttf'
+    '*.eot'
+    '*.lock'
+    'package-lock.json'
+    'yarn.lock'
+)
+
+# Get staged files
+FILES=$(git diff --cached --name-only --diff-filter=ACM 2>/dev/null)
+
+if [ -z "$FILES" ]; then
+    echo "✅ No files to check"
+    exit 0
+fi
+
+found_secrets=0
+declare -A findings
+
+for file in $FILES; do
+    # Skip binary and known safe files
+    skip=0
+    for pattern in "${SKIP_FILES[@]}"; do
+        if [[ "$file" == $pattern ]] || [[ "$file" == *"$pattern" ]]; then
+            skip=1
+            break
+        fi
+    done
+    
+    if [ $skip -eq 1 ]; then
+        continue
+    fi
+    
+    # Skip if file doesn't exist (deleted)
+    if [ ! -f "$file" ]; then
+        continue
+    fi
+    
+    # Check each dangerous pattern
+    for pattern in "${DANGEROUS_PATTERNS[@]}"; do
+        matches=$(grep -noE "$pattern" "$file" 2>/dev/null || true)
+        
+        if [ -n "$matches" ]; then
+            # Check if each match is actually safe (placeholder)
+            while IFS= read -r match; do
+                is_safe=0
+                for safe in "${SAFE_INDICATORS[@]}"; do
+                    if echo "$match" | grep -qiE "$safe"; then
+                        is_safe=1
+                        break
+                    fi
+                done
+                
+                # Also check if it's a base64 blob (common in JSON results)
+                if echo "$match" | grep -qE '^[0-9]+:eJy'; then
+                    is_safe=1
+                fi
+                
+                if [ $is_safe -eq 0 ]; then
+                    line_num=$(echo "$match" | cut -d: -f1)
+                    content=$(echo "$match" | cut -d: -f2-)
+                    
+                    # Truncate long matches
+                    if [ ${#content} -gt 60 ]; then
+                        content="${content:0:60}..."
+                    fi
+                    
+                    echo ""
+                    echo "⚠️  POTENTIAL SECRET in $file:$line_num"
+                    echo "   $content"
+                    found_secrets=1
+                fi
+            done <<< "$matches"
+        fi
+    done
+done
+
+echo ""
+
+if [ $found_secrets -eq 1 ]; then
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo "❌ COMMIT BLOCKED: Potential secrets detected!"
+    echo ""
+    echo "   Actions:"
+    echo "   1. Remove hardcoded credentials from the flagged files"
+    echo "   2. Use environment variables: os.getenv('KEY_NAME')"
+    echo "   3. Add secrets to .env (which is gitignored)"
+    echo "   4. Reference env vars in docs: '<see .env: KEY_NAME>'"
+    echo ""
+    echo "   See: docs/SECRETS_PROTECTION.md"
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    exit 1
+fi
+
+echo "✅ No secrets detected - commit allowed"
+exit 0
