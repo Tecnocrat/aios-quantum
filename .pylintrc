@@ -1,0 +1,43 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# AINLP.buffer[120] - Line Length Liberation (v1.11)
+# ═══════════════════════════════════════════════════════════════════════════
+# C0301 DISABLED: Line length irrelevant to AI agents and humans
+# max-line-length=120: Backup safety only (never triggers with C0301 off)
+# Docstrings ENABLED: C0114-C0116 - what actually matters for AI comprehension
+# Reference: AINLP Bible Corpus v1.11
+# Generated: 2025-12-14T18:07:41.336370
+# ═══════════════════════════════════════════════════════════════════════════
+
+[MAIN]
+fail-under=8.0
+ignore=CVS,.git,__pycache__,.venv,venv,node_modules
+
+[FORMAT]
+# AINLP.buffer[120] - Modern standard, no formatter conflicts
+max-line-length=120
+indent-string='    '
+
+[MESSAGES CONTROL]
+# C0301 DISABLED - Line length is obsolete (1970s terminal constraint)
+# C0114-C0116 ENABLED - Docstrings matter for AI comprehension
+disable=C0301,
+        raw-checker-failed,
+        bad-inline-option,
+        locally-disabled,
+        file-ignored,
+        suppressed-message
+
+[BASIC]
+good-names=i,j,k,ex,_,id,f,e,db,r,msg,cell,ai,config,logger
+
+[DESIGN]
+max-args=10
+max-attributes=15
+max-public-methods=25
+min-public-methods=0
+
+[TYPECHECK]
+ignore-mixin-members=yes
+
+[IMPORTS]
+allow-wildcard-with-all=no
