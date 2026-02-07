@@ -1,0 +1,63 @@
+{
+  "beat_number": 0,
+  "timestamp_utc": "2026-02-07T11:36:22.852029+00:00",
+  "timestamp_local": "2026-02-07T12:36:22.852029",
+  "backend_name": "ibm_marrakesh",
+  "job_id": "d63i77jtraac73bha1vg",
+  "execution_time_seconds": 25.78866982460022,
+  "source": "real",
+  "backend_family": "heron",
+  "backend_processor": "r2",
+  "num_qubits": 5,
+  "circuit_depth": 8,
+  "shots": 2048,
+  "counts": {
+    "00000": 1753,
+    "00010": 18,
+    "00100": 63,
+    "01000": 48,
+    "10000": 114,
+    "00110": 6,
+    "11010": 1,
+    "00001": 11,
+    "10010": 2,
+    "01100": 6,
+    "11000": 15,
+    "10100": 7,
+    "01010": 1,
+    "11100": 1,
+    "01110": 1,
+    "00011": 1
+  },
+  "coherence_estimate": 0.85595703125,
+  "entropy": 0.19437227439164867,
+  "top_states": [
+    {
+      "state": "00000",
+      "count": 1753,
+      "probability": 0.85595703125
+    },
+    {
+      "state": "10000",
+      "count": 114,
+      "probability": 0.0556640625
+    },
+    {
+      "state": "00100",
+      "count": 63,
+      "probability": 0.03076171875
+    },
+    {
+      "state": "01000",
+      "count": 48,
+      "probability": 0.0234375
+    },
+    {
+      "state": "00010",
+      "count": 18,
+      "probability": 0.0087890625
+    }
+  ],
+  "budget_used_total": 25.78866982460022,
+  "budget_remaining": 574.2113301753998
+}

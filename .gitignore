@@ -51,6 +51,7 @@ env/
 qiskit_ibm_runtime*.json
 ibmcloud_credentials.json
 *_credentials.json
+apikey.json
 
 # Certificates and keys
 *.pem

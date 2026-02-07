@@ -14,8 +14,8 @@ class QuantumConfig:
     """Configuration for IBM Quantum Platform connection."""
     
     token: str
-    instance: str = "ibm-q/open/main"
-    channel: str = "ibm_cloud"
+    instance: str = "open-instance"
+    channel: str = "ibm_quantum_platform"
     
     @classmethod
     def from_env(cls, env_file: Optional[str] = None) -> "QuantumConfig":

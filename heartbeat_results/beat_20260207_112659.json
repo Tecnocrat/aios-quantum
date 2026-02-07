@@ -1,0 +1,29 @@
+{
+  "beat_id": "beat_20260207_112659",
+  "timestamp": "2026-02-07T11:26:59.284106+00:00",
+  "backend": "ibm_torino",
+  "num_qubits": 5,
+  "shots": 2048,
+  "depth": 20,
+  "gate_count": 28,
+  "execution_time_seconds": 5.99,
+  "coherence_estimate": 0.046387,
+  "entropy": 0.995102,
+  "top_measurement_states": {
+    "10010": 95,
+    "00001": 83,
+    "00010": 83,
+    "00000": 81,
+    "01000": 76,
+    "10000": 76,
+    "10110": 75,
+    "01110": 74
+  },
+  "total_unique_states": 32,
+  "job_id": "d63i2vbc4tus73fek3jg",
+  "source": "live_ibm_quantum",
+  "circuit_type": "ghz_phi_encoded",
+  "aios_constants": {
+    "phi": 1.618033988749895
+  }
+}

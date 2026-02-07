@@ -56,6 +56,12 @@ class HeartbeatConfig:
     use_simulator: bool = False  # Set True for testing
     dry_run: bool = False  # Log but don't execute
     
+    # Multi-provider configuration
+    preferred_provider: str = ""  # "ibm", "qbraid", "braket", "" = auto
+    preferred_backend: str = ""  # Specific backend name, "" = auto
+    provider_priority: list = None  # Provider failover order
+    use_provider_registry: bool = True  # Use multi-provider (vs legacy IBM-only)
+    
     # Backend rotation (for multi-core scatter pattern)
     backend_rotation: list = None  # List of backends to cycle through
     rotation_index_file: str = "heartbeat_results/.rotation_index"
@@ -183,6 +189,9 @@ class QuantumHeartbeat:
         self._runtime = None
         self._backend = None
         
+        # Multi-provider registry (lazy init)
+        self._provider_registry = None
+        
         # Backend rotation tracking
         self._rotation_index = self._load_rotation_index()
         
@@ -191,6 +200,8 @@ class QuantumHeartbeat:
         logger.info(f"  Qubits: {self.config.num_qubits}")
         logger.info(f"  Shots: {self.config.shots}")
         logger.info(f"  Simulator mode: {self.config.use_simulator}")
+        if self.config.preferred_provider:
+            logger.info(f"  Preferred provider: {self.config.preferred_provider}")
         if self.config.backend_rotation:
             logger.info(f"  Backend rotation: {self.config.backend_rotation}")
     
@@ -261,8 +272,16 @@ class QuantumHeartbeat:
             logger.warning(f"Backend discovery failed: {e}")
             return []
     
+    def _get_provider_registry(self):
+        """Lazy initialization of the multi-provider registry."""
+        if self._provider_registry is None:
+            from aios_quantum.providers import ProviderRegistry
+            priority = self.config.provider_priority
+            self._provider_registry = ProviderRegistry(priority=priority)
+        return self._provider_registry
+    
     def _get_runtime(self):
-        """Lazy initialization of quantum runtime."""
+        """Lazy initialization of quantum runtime (legacy IBM-only path)."""
         if self._runtime is None:
             if self.config.use_simulator:
                 logger.info("Using local simulator (BasicSimulator)")
@@ -404,6 +423,10 @@ class QuantumHeartbeat:
         """
         Execute a single quantum heartbeat.
         
+        Uses the multi-provider registry with automatic failover when
+        use_provider_registry=True (default). Falls back to legacy
+        IBM-only path otherwise.
+        
         Returns the result, or None if budget exhausted or error.
         """
         # Check budget
@@ -420,52 +443,85 @@ class QuantumHeartbeat:
             return None
         
         try:
-            # Get runtime
-            _, backend = self._get_runtime()
-            
             # Create circuit
             circuit = self._create_heartbeat_circuit()
             logger.info(f"Circuit created: {circuit.num_qubits} qubits, "
                        f"depth {circuit.depth()}")
             
-            # Execute
-            start_time = time.time()
+            # ── Multi-provider path (default) ──
+            if self.config.use_provider_registry and not self.config.use_simulator:
+                registry = self._get_provider_registry()
+                
+                preferred = self.config.preferred_provider or None
+                backend = self.config.preferred_backend or None
+                
+                # Override with rotation if configured
+                if self.config.backend_rotation:
+                    backend = self._get_next_backend_name() or backend
+                
+                cr = registry.run_heartbeat_circuit(
+                    circuit,
+                    shots=self.config.shots,
+                    preferred_provider=preferred,
+                    preferred_backend=backend,
+                )
+                
+                counts = cr.counts
+                job_id = cr.job_id
+                backend_name = cr.backend_name
+                execution_time = cr.execution_time
+                
+                # Determine source classification
+                if cr.is_real_hardware:
+                    source, family, processor = classify_backend(backend_name)
+                    if source == "simulation":
+                        # Provider says real but we don't recognize it — trust provider
+                        source = "real"
+                        family = cr.provider_name
+                        processor = ""
+                else:
+                    source = "simulation"
+                    family = "simulator"
+                    processor = ""
             
-            if self.config.use_simulator:
-                # Local simulation using Qiskit's built-in StatevectorSampler
+            # ── Legacy simulator path ──
+            elif self.config.use_simulator:
                 from qiskit.primitives import StatevectorSampler
                 sampler = StatevectorSampler()
+                start_time = time.time()
                 job = sampler.run([circuit], shots=self.config.shots)
                 result = job.result()
-                # StatevectorSampler returns PrimitiveResult
                 counts = result[0].data.meas.get_counts()
                 job_id = "simulator"
                 backend_name = "statevector_sampler"
+                execution_time = time.time() - start_time
+                source, family, processor = classify_backend(backend_name)
+            
+            # ── Legacy IBM-only path ──
             else:
-                # Real hardware via Qiskit Runtime
+                _, backend_obj = self._get_runtime()
                 from qiskit_ibm_runtime import SamplerV2
                 from qiskit import transpile
                 
                 transpiled = transpile(
                     circuit, 
-                    backend,
+                    backend_obj,
                     optimization_level=self.config.optimization_level
                 )
-                sampler = SamplerV2(backend)
+                start_time = time.time()
+                sampler = SamplerV2(backend_obj)
                 job = sampler.run([transpiled], shots=self.config.shots)
                 result = job.result()
                 counts = result[0].data.meas.get_counts()
                 job_id = job.job_id()
-                backend_name = backend.name
+                backend_name = backend_obj.name
+                execution_time = time.time() - start_time
+                source, family, processor = classify_backend(backend_name)
             
-            execution_time = time.time() - start_time
             self.budget_used += execution_time
             
             # Calculate metrics
             metrics = self._calculate_metrics(counts)
-            
-            # Classify backend for source/family/processor
-            source, family, processor = classify_backend(backend_name)
             
             # Create result object
             now_utc = datetime.now(timezone.utc)
