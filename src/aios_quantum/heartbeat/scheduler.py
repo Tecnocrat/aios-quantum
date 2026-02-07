@@ -491,7 +491,9 @@ class QuantumHeartbeat:
                 start_time = time.time()
                 job = sampler.run([circuit], shots=self.config.shots)
                 result = job.result()
-                counts = result[0].data.meas.get_counts()
+                data_pub = result[0].data
+                meas_data = getattr(data_pub, "meas", None) or next(iter(vars(data_pub).values()))
+                counts = meas_data.get_counts()  # type: ignore[union-attr]
                 job_id = "simulator"
                 backend_name = "statevector_sampler"
                 execution_time = time.time() - start_time
@@ -502,6 +504,10 @@ class QuantumHeartbeat:
                 _, backend_obj = self._get_runtime()
                 from qiskit_ibm_runtime import SamplerV2
                 from qiskit import transpile
+                from qiskit.providers import BackendV2
+                
+                if not isinstance(backend_obj, BackendV2):
+                    raise RuntimeError(f"Legacy IBM path requires a BackendV2 instance, got {type(backend_obj)}")
                 
                 transpiled = transpile(
                     circuit, 
@@ -512,7 +518,9 @@ class QuantumHeartbeat:
                 sampler = SamplerV2(backend_obj)
                 job = sampler.run([transpiled], shots=self.config.shots)
                 result = job.result()
-                counts = result[0].data.meas.get_counts()
+                data_pub = result[0].data
+                meas_data = getattr(data_pub, "meas", None) or next(iter(vars(data_pub).values()))
+                counts = meas_data.get_counts()  # type: ignore[union-attr]
                 job_id = job.job_id()
                 backend_name = getattr(backend_obj, "name", str(backend_obj)) if backend_obj else "unknown"
                 execution_time = time.time() - start_time
