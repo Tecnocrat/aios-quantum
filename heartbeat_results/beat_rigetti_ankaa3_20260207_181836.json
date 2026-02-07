@@ -1,0 +1,27 @@
+{
+  "timestamp": "2026-02-07T17:18:36.390684+00:00",
+  "provider": "qbraid",
+  "backend": "rigetti_ankaa_3",
+  "backend_type": "real_qpu",
+  "technology": "superconducting",
+  "manufacturer": "Rigetti",
+  "num_qubits_device": 82,
+  "job_id": "rigetti_ankaa_3-jesussard-qjob-z0m4m9hke6gjlvsnxn7c",
+  "num_qubits": 3,
+  "shots": 100,
+  "execution_time_seconds": 37.715205669403076,
+  "coherence_estimate": 0.92,
+  "entropy": 0.49779180073550805,
+  "dominant_state": "111",
+  "dominant_probability": 0.48,
+  "measurement_counts": {
+    "000": 44,
+    "001": 1,
+    "011": 1,
+    "100": 3,
+    "101": 1,
+    "110": 2,
+    "111": 48
+  },
+  "unique_states": 7
+}
