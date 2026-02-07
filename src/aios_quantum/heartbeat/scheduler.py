@@ -59,11 +59,11 @@ class HeartbeatConfig:
     # Multi-provider configuration
     preferred_provider: str = ""  # "ibm", "qbraid", "braket", "" = auto
     preferred_backend: str = ""  # Specific backend name, "" = auto
-    provider_priority: list = None  # Provider failover order
+    provider_priority: Optional[list] = None  # Provider failover order
     use_provider_registry: bool = True  # Use multi-provider (vs legacy IBM-only)
     
     # Backend rotation (for multi-core scatter pattern)
-    backend_rotation: list = None  # List of backends to cycle through
+    backend_rotation: Optional[list] = None  # List of backends to cycle through
     rotation_index_file: str = "heartbeat_results/.rotation_index"
     
     def beats_remaining(self, used_seconds: float) -> int:
@@ -514,7 +514,7 @@ class QuantumHeartbeat:
                 result = job.result()
                 counts = result[0].data.meas.get_counts()
                 job_id = job.job_id()
-                backend_name = backend_obj.name
+                backend_name = getattr(backend_obj, "name", str(backend_obj)) if backend_obj else "unknown"
                 execution_time = time.time() - start_time
                 source, family, processor = classify_backend(backend_name)
             
