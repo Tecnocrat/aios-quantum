@@ -1,0 +1,17 @@
+{
+  "timestamp": "2026-02-07T14:07:01.918720+00:00",
+  "provider": "ionq",
+  "backend": "simulator",
+  "job_id": "019c386d-58ed-77af-a440-43880d2b5d70",
+  "num_qubits": 5,
+  "shots": 2048,
+  "execution_time_seconds": 6.38012433052063,
+  "coherence_estimate": 1.0,
+  "entropy": 0.0,
+  "dominant_state": "000",
+  "dominant_probability": 0.907227,
+  "measurement_counts": {
+    "000": 1858,
+    "111": 190
+  }
+}

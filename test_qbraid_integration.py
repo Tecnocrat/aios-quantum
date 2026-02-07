@@ -303,8 +303,12 @@ def test_live_qbraid():
     backends = p.get_backends()
     print(f"  Backends:   {backends[:10]}")
 
-    # Try QIR simulator first, fall back to any online device
-    target = "qbraid_qir_simulator" if "qbraid_qir_simulator" in backends else backends[0]
+    # Prefer online simulators, then cheap QPUs
+    qir_pref = ["ionq_simulator", "aws_sv1", "qbraid_qir_simulator", "aws_dm1"]
+    target = next((t for t in qir_pref if t in backends), backends[0] if backends else None)
+    if target is None:
+        print("  ✗ No backends available")
+        return False
 
     qc = build_heartbeat_circuit()
     print(f"  Submitting heartbeat to {target}...")

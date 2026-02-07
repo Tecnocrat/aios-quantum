@@ -1,0 +1,17 @@
+{
+  "timestamp": "2026-02-07T14:18:11.848485+00:00",
+  "provider": "qbraid",
+  "backend": "ionq_simulator",
+  "job_id": "ionq_simulator-jesussard-qjob-co0szqxyzw9y7svypewu",
+  "num_qubits": 5,
+  "shots": 2048,
+  "execution_time_seconds": 161.74660277366638,
+  "coherence_estimate": 1.0,
+  "entropy": 0.0,
+  "dominant_state": "000",
+  "dominant_probability": 0.907227,
+  "measurement_counts": {
+    "000": 1858,
+    "111": 190
+  }
+}

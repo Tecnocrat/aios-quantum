@@ -359,10 +359,8 @@ class QBraidProvider(QuantumProvider):
 
     def get_backends(self) -> List[str]:
         provider = self._get_provider()
-        devices = provider.get_devices(
-            statuses=["ONLINE"],
-        )
-        return [d.id for d in devices]
+        devices = provider.get_devices()
+        return [d.id for d in devices if getattr(d, 'status', None) != 'OFFLINE']
 
     def run_circuit(
         self,
